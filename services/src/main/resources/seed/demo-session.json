@@ -1,0 +1,107 @@
+{
+  "id": "5a4354810e8e3d000797151d",
+  "name": "demo-session",
+  "dataDefinition": {
+    "id": "5a4354470e8e3d000797151c",
+    "name": "demo-dd",
+    "schema": {
+      "metadata": {
+        "type": "json"
+      },
+      "type": "object",
+      "properties": {
+        "greetings": {
+          "type": "string",
+          "metadata": {
+            "position": "greetings",
+            "name": "greetings property",
+            "description": ""
+          }
+        },
+        "counter": {
+          "type": "number",
+          "metadata": {
+            "type": "integer",
+            "position": "counter",
+            "name": "counter property",
+            "description": ""
+          }
+        },
+        "timestamp": {
+          "type": "number",
+          "metadata": {
+            "format": "milliseconds",
+            "position": "timestamp",
+            "name": "timestamp property",
+            "description": "",
+            "type": "timestamp"
+          }
+        }
+      },
+      "schemaKey": "http://json-schema.org/draft-04/schema#"
+    }
+  },
+  "timer": {
+    "type": "interval",
+    "metric": "seconds",
+    "value": 1
+  },
+  "devices": [],
+  "generator": {
+    "type": "schema_based",
+    "schema": {
+      "metadata": {
+        "type": "json"
+      },
+      "type": "object",
+      "properties": {
+        "greetings": {
+          "type": "string",
+          "metadata": {
+            "position": "greetings",
+            "name": "greetings property",
+            "description": ""
+          },
+          "rule": {
+            "type": "literal_string",
+            "value": "Hello there !!!"
+          }
+        },
+        "counter": {
+          "type": "number",
+          "metadata": {
+            "type": "integer",
+            "position": "counter",
+            "name": "counter property",
+            "description": ""
+          },
+          "rule": {
+            "type": "custom_function",
+            "function": "\n/**\n * \n * Please, note the following information:\n * - to print information to docker console use \"print\" (console.log is not available)\n * - \"momentjs\" and \"lodash\" libraries are supported and available in global scope\n * \n * @param  {object} ruleState may be used to store information between iterations\n * @param  {object} sessionState may be used to store information between rules\n * @param  {string} deviceName device name\n * @return {integer} value that will be populated to specified property\n */\nfunction custom(ruleState, sessionState, deviceName) { \n    \n    if (!ruleState.counter) {\n        ruleState.counter = 1;\n    }\n    \n    return ruleState.counter++;\n}\n"
+          }
+        },
+        "timestamp": {
+          "type": "number",
+          "metadata": {
+            "format": "milliseconds",
+            "position": "timestamp",
+            "name": "timestamp property",
+            "description": "",
+            "type": "timestamp"
+          },
+          "rule": {
+            "type": "current_time",
+            "metric": "milliseconds",
+            "shift": 0
+          }
+        }
+      },
+      "schemaKey": "http://json-schema.org/draft-04/schema#"
+    }
+  },
+  "targetSystem": {
+    "id": "5a4223da85b4b900050e7474",
+    "name": "Dummy",
+    "type": "dummy"
+  }
+}

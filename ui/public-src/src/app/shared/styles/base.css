@@ -1,0 +1,18 @@
+html, body, #app {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    position: fixed;
+    font-family: 'Roboto', 'sans-serif';
+}
+
+:invalid {
+  box-shadow: none !important;
+}
+
+button, html [type="button"],[type="reset"], [type="submit"] { -webkit-appearance: none }
+
+* {
+  box-sizing: border-box;
+}

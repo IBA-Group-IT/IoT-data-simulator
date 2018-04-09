@@ -1,0 +1,36 @@
+package com.iba.iot.datasimulator.common.model.schema.property.rule;
+
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.iba.iot.datasimulator.common.model.IntervalMetric;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
+import javax.validation.constraints.NotNull;
+
+@Data
+@ToString
+@JsonDeserialize
+@NoArgsConstructor
+public class RelativeTimeSchemaPropertyRule implements SchemaPropertyRule {
+
+    @Getter
+    @NotNull
+    private SchemaPropertyRuleType type = SchemaPropertyRuleType.RELATIVE_TIME;
+
+    @NotNull
+    private String relativePosition;
+
+    private Integer shift;
+
+    private IntervalMetric metric;
+
+    /**
+     *
+     * @param relativePosition
+     */
+    public RelativeTimeSchemaPropertyRule(String relativePosition) {
+        this.relativePosition = relativePosition;
+    }
+}

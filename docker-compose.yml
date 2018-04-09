@@ -1,0 +1,98 @@
+version: '3'
+services:
+  mongodb:
+    image: mongo:3.5
+    container_name: iot-ds-mongodb
+    volumes:
+      - mongodb-data:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGODB_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGODB_PASSWORD}
+      - MONGO_INITDB_DATABASE =${MONGODB_INIT_DATABASE}
+    ports:
+      - 27017:27017
+  minio:
+    image: minio/minio
+    container_name: iot-ds-minio
+    volumes:
+      - minio-data:/data
+      - minio-config:/root/.minio
+    environment:
+      - MINIO_ACCESS_KEY=${MINIO_ACCESS_KEY}
+      - MINIO_SECRET_KEY=${MINIO_SECRET_KEY}
+    ports:
+      - 9000:9000
+    command: ["server", "/data"]
+  rabbitmq:
+    build: ./rabbitmq
+    image: ibagroup/iot-data-simulator-rabbitmq:0.1
+    container_name: iot-ds-rabbitmq
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASS}
+    ports:
+      - 5672:5672 
+      - 15671:15671
+      - 15672:15672
+      - 61613:61613
+  services:
+    build: ./services
+    image: ibagroup/iot-data-simulator-services:1.0.1
+    container_name: iot-ds-services
+    depends_on:
+      - mongodb
+      - minio
+      - rabbitmq
+      - data-sender  
+    environment:
+      - JAVA_OPTS=-Xmx3500m
+      - MONGODB_URI=mongodb://${MONGODB_USERNAME}:${MONGODB_PASSWORD}@mongodb:27017/admin
+      - MINIO_URL=http://minio:9000
+      - MINIO_ACCESS_KEY=${MINIO_ACCESS_KEY}
+      - MINIO_SECRET_KEY=${MINIO_SECRET_KEY}
+      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_STOMP_PORT=61613
+      - RABBITMQ_PORT=5672
+      - RABBITMQ_USER=${RABBITMQ_USER}
+      - RABBITMQ_PASS=${RABBITMQ_PASS}
+      - SKIP_RULE_PROCESSING_FOR_EMPTY_DATASET_PROPERTY=true
+      - SKIP_EMPTY_GENERATED_VALUES=true
+      - IMPORT_DEMO_SESSION=true 
+    ports:
+      - 8083:8083
+  ui:
+    build: ./ui
+    image: ibagroup/iot-data-simulator-ui:1.0.1
+    container_name: iot-ds-ui
+    depends_on:
+      - services
+    environment:
+      - WEBSOCKET_URL=http://services:8083/ws
+      - REST_URL=http://services:8083
+      - LOGS_BUFFER_SIZE=100
+    volumes:
+      - ui-data:/data
+    ports:
+      - 8090:8090
+    command: ["npm", "start"]
+  data-sender:
+    build: ./data-sender
+    image: ibagroup/iot-data-simulator-sender:1.0.1
+    container_name: iot-ds-data-sender
+    depends_on:
+      - rabbitmq
+    ports:
+      - 5858:5858
+    environment:
+      - RABBITMQ_URL=amqp://${RABBITMQ_USER}:${RABBITMQ_PASS}@rabbitmq:5672
+      - AWS_IOT_SERVICE=iotdata
+      #- DATA_SENDER_DEBUG_MODE=true
+     
+volumes:
+  mongodb-data:
+  minio-data:
+  minio-config:
+  rabbitmq-data:
+  ui-data:

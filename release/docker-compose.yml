@@ -1,0 +1,76 @@
+version: '3'
+services:
+  mongodb:
+    image: mongo:3.5
+    volumes:
+      - mongodb-data:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGODB_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGODB_PASSWORD}
+      - MONGO_INITDB_DATABASE =${MONGODB_INIT_DATABASE}
+  minio:
+    image: minio/minio
+    volumes:
+      - minio-data:/data
+      - minio-config:/root/.minio
+    environment:
+      - MINIO_ACCESS_KEY=${MINIO_ACCESS_KEY}
+      - MINIO_SECRET_KEY=${MINIO_SECRET_KEY}
+    ports:
+      - 9000:9000
+    command: ["server", "/data"]
+  rabbitmq:
+    image: ibagroup/iot-data-simulator-rabbitmq
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASS}
+  services:
+    image: ibagroup/iot-data-simulator-services
+    depends_on:
+      - mongodb
+      - minio
+      - rabbitmq  
+      - data-sender      
+    environment:
+      - JAVA_OPTS=-Xmx3500m
+      - MONGODB_URI=mongodb://${MONGODB_USERNAME}:${MONGODB_PASSWORD}@mongodb:27017/admin
+      - MINIO_URL=http://minio:9000
+      - MINIO_ACCESS_KEY=${MINIO_ACCESS_KEY}
+      - MINIO_SECRET_KEY=${MINIO_SECRET_KEY}
+      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_STOMP_PORT=61613
+      - RABBITMQ_PORT=5672
+      - RABBITMQ_USER=${RABBITMQ_USER}
+      - RABBITMQ_PASS=${RABBITMQ_PASS}
+      - SKIP_RULE_PROCESSING_FOR_EMPTY_DATASET_PROPERTY=true
+      - SKIP_EMPTY_GENERATED_VALUES=true
+      - IMPORT_DEMO_SESSION=true
+  ui:
+    image: ibagroup/iot-data-simulator-ui
+    depends_on:
+      - services
+    environment:
+      - WEBSOCKET_URL=http://services:8083/ws
+      - REST_URL=http://services:8083
+      - LOGS_BUFFER_SIZE=100
+    volumes:
+      - ui-data:/data
+    ports:
+      - 8090:8090
+    command: ["npm", "start"]
+  data-sender:
+    image: ibagroup/iot-data-simulator-sender
+    depends_on:
+      - rabbitmq
+    environment:
+      - RABBITMQ_URL=amqp://${RABBITMQ_USER}:${RABBITMQ_PASS}@rabbitmq:5672
+    command: ["/usr/data-sender/wait-for-it.sh", "rabbitmq:5672", "--timeout=360", "--strict", "--", 
+              "npm", "start"]
+volumes:
+  mongodb-data:
+  minio-data:
+  minio-config:
+  rabbitmq-data:
+  ui-data:

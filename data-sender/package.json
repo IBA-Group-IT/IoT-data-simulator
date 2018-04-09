@@ -1,0 +1,41 @@
+{
+  "name": "data-sender",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "server": "node ./src/bin/sender.js",
+    "debug": "node --nolazy --inspect=0.0.0.0:5858 ./src/bin/sender.js"
+  },
+  "dependencies": {
+    "amqplib": "^0.5.2",
+    "async-mqtt": "^1.0.1",
+    "aws-iot-device-sdk": "^2.2.0",
+    "aws-sdk": "^2.177.0",
+    "aws4": "^1.6.0",
+    "bluebird": "^3.5.1",
+    "body-parser": "~1.18.2",
+    "cache-manager": "^2.6.0",
+    "cache-manager-fs": "^1.0.6",
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.6.9",
+    "express": "^4.16.2",
+    "fs-extra": "^4.0.3",
+    "js-base64": "^2.4.0",
+    "kafka-node": "^2.3.1",
+    "minio": "^3.2.3",
+    "moment": "^2.20.1",
+    "node-cache": "^4.1.1",
+    "path": "^0.12.7",
+    "protobufjs": "^6.8.4",
+    "request": "^2.83.0",
+    "request-promise": "^4.2.2",
+    "serve-favicon": "~2.4.5",
+    "uuid": "^3.1.0",
+    "websocket": "^1.0.25",
+    "winston": "^2.4.0"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-javascript-obfuscator": "^1.1.4"
+  }
+}

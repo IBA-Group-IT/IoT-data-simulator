@@ -1,0 +1,264 @@
+asyncapi: '1.0.0'
+info:
+  title: 'IoT Data simulator websocket/STOMP API'
+  version: '1.0.0'
+  x-logo: https://avatars0.githubusercontent.com/u/16401334?v=4&s=200
+
+servers:
+  - url: services:8080/ws
+    description: sessions management API
+    scheme: stomp
+
+topics:
+
+  '/user/queue/error':
+    subscribe:
+      $ref: '#/components/messages/errorMessage'
+
+  '/user/queue/sessions':
+    subscribe:
+      $ref: '#/components/messages/sessionStatusesCommandResultMessage'
+  '/sessions':
+    publish:
+      $ref: '#/components/messages/sessionStatusesCommandMessage'
+
+  '/user/queue/sessions.{sessionId}':
+    subscribe:
+      $ref: '#/components/messages/sessionManagementCommandResultMessage'
+  '/sessions.{sessionId}':
+    publish:
+      $ref: '#/components/messages/sessionManagementCommandMessage'
+
+  '/topic/sessions.{sessionId}':
+    subscribe:
+      $ref: '#/components/messages/sessionStatusMessage'
+  '/topic/sessions.{sessionId}.payload':
+    subscribe:
+      $ref: '#/components/messages/sessionsPayloadMessage'
+  '/topic/sessions.{sessionId}.analytics':
+    subscribe:
+      $ref: '#/components/messages/sessionsAnalyticsMessage'
+  '/topic/sessions.{sessionId}.errors':
+    subscribe:
+      $ref: '#/components/messages/sessionsErrorMessage'
+
+
+components:
+
+  messages:
+
+    errorMessage:
+      summary: Services unexpected error message.
+      tags:
+        - name: error
+      payload:
+        type: object
+        properties:
+          message:
+            type: string
+            description: error message property
+
+    sessionStatusesCommandMessage:
+      summary: An empty message to trigger provision of all active sessions statuses.
+      tags:
+        - name: sessions
+        - name: status
+        - name: command
+
+    sessionManagementCommandMessage:
+      summary: Message to manage session execution.
+      tags:
+        - name: sessions
+        - name: management
+        - name: command
+      payload:
+        type: object
+        properties:
+          sessionId:
+            type: string
+            description: session id property
+          command:
+            type: 'string'
+            description: 'session management command. One of the following: "start" | "pause" | "stop" | "restart"'
+            enum:
+              - 'start'
+              - 'pause'
+              - 'stop'
+              - 'restart'
+        required:
+          - sessionId
+          - command
+
+    sessionManagementCommandResultMessage:
+      summary: Active sesssion managemnt command result.
+      tags:
+        - name: sessions
+        - name: management
+        - name: command
+        - name: result
+      payload:
+        type: object
+        properties:
+          type:
+            type: string
+            default : 'session_management_command_result'
+            description: '"session_management_command_result" message type'
+          sessionId:
+            type: string
+            description: session id property
+          result:
+            $ref: '#/components/schemas/commandResult'
+          errorMessage:
+            $ref: '#/components/schemas/commandErrorMessage'
+
+    sessionStatusesCommandResultMessage:
+      summary: Active sesssions status information.
+      tags:
+        - name: session
+        - name: status
+        - name: command
+        - name: result
+      payload:
+        type: object
+        properties:
+          type:
+            type: string
+            default : 'sessions_status_command_result'
+            description: '"sessions_status_command_result" message type'
+          result:
+            $ref: '#/components/schemas/commandResult'
+          errorMessage:
+            $ref: '#/components/schemas/commandErrorMessage'
+          statuses:
+            type: 'array'
+            description: active sessions statuses
+            items:
+              $ref: '#/components/schemas/sessionStatus'
+        required:
+          - type
+          - statuses
+
+    sessionStatusMessage:
+      summary: Active sesssions status result message.
+      tags:
+        - name: session
+        - name: status
+      payload:
+        type: object
+        properties:
+          type:
+            type: string
+            default : 'session_status'
+            description: '"session_status" message type'
+          status:
+            $ref: '#/components/schemas/sessionStatus'
+
+    sessionsPayloadMessage:
+      summary: Active sesssions processed payload message.
+      tags:
+        - name: session
+        - name: payload
+      payload:
+        type: object
+        properties:
+          type:
+            type: string
+            default : 'session_payload'
+            description: '"session_payload" message type'
+          sessionId:
+            type: string
+            description: session id property
+          message:
+            type: string
+            description: session payload message which has been successfully sent to external target system
+          timestamp:
+            type: number
+            format: int64
+            description: unix format timestamp
+
+    sessionsAnalyticsMessage:
+      summary: Active sesssion analytics message.
+      tags:
+        - name: session
+        - name: analytics
+      payload:
+        type: object
+        properties:
+          type:
+            type: string
+            default : 'session_analytics'
+            description: '"session_analytics" message type'
+          tag:
+            type: string
+            description: 'session analytics tag. One of the following: "sessions_started" | "session_completed" | "session_paused" | "session_failed"'
+            enum:
+             - 'sessions_started'
+             - 'session_completed'
+             - 'session_paused'
+             - 'session_failed'
+          sessionId:
+            type: string
+            description: session id property
+          message:
+            type: string
+            description: session analytics message
+          timestamp:
+            type: number
+            format: int64
+            description: unix format timestamp
+
+    sessionsErrorMessage:
+      summary: Active sesssion error message.
+      tags:
+        - name: session
+        - name: error
+      payload:
+        type: object
+        properties:
+          type:
+            type: string
+            default : 'session_error'
+            description: '"session_error" message type'
+          sessionId:
+            type: string
+            description: session id property
+          message:
+            type: string
+            description: error message
+          timestamp:
+            type: number
+            format: int64
+            description: unix format timestamp
+
+
+  schemas:
+      sessionStatus:
+        type: object
+        properties:
+          sessionId:
+            type: string
+            description: session id property
+          state:
+            type: string
+            description: 'current active session state. One of the following: "running" | "paused" | "completed" | "failed"'
+            enum:
+              - 'running'
+              - 'paused'
+              - 'completed'
+              - 'failed'
+          errors:
+            type: array
+            description: 'contains session errors in case of session state "failed"'
+            items:
+              type: string
+
+      commandResult:
+        type: string
+        description: 'command processing result. One of the following: "success" | "failure"'
+        enum:
+         - 'success'
+         - 'failure'
+
+      commandErrorMessage:
+        type: string
+        description: 'contains error description in case of result: "failure"'

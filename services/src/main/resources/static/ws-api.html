@@ -1,0 +1,1191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>IoT Data simulator websocket/STOMP API 1.0.0 documentation</title>
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-dark.min.css" />
+</head>
+<body>
+  <div class="navigation">
+    <div class="navigation__logo">
+      <img class="navigation__logo__image" src="https://avatars0.githubusercontent.com/u/16401334?v&#x3D;4&amp;s&#x3D;200" alt="IoT Data simulator websocket/STOMP API logo">
+      <h1 class="navigation__logo__name">IoT Data simulator websocket/STOMP API</h1>
+      <div class="navigation__logo__version">1.0.0</div>
+    </div>
+    <h2 class="navigation__header">Introduction</h2>
+    <ul class="navigation__list">
+      <li clas="navigation__list__item">
+        <a class="navigation__list__item-text navigation__list__item-text--link" href="#info">Basic Information</a>
+      </li>
+      <li clas="navigation__list__item">
+        <a class="navigation__list__item-text navigation__list__item-text--link" href="#connectionDetails">Connection Details</a>
+      </li>
+    </ul>
+
+    <h2 class="navigation__header">Topics</h2>
+    <ul class="navigation__list">
+      <li class="navigation__list__item">
+        <a class="navigation__list__item-text navigation__list__item-text--link" href="#topic-./user/queue/error">
+          
+          
+          <span class="navigation__list__item__topic-indicator navigation__list__item__topic-indicator--subscribe" title="Subscribe"></span>
+          ./user/queue/error
+        </a>
+      </li>
+      <li class="navigation__list__item">
+        <a class="navigation__list__item-text navigation__list__item-text--link" href="#topic-./user/queue/sessions">
+          
+          
+          <span class="navigation__list__item__topic-indicator navigation__list__item__topic-indicator--subscribe" title="Subscribe"></span>
+          ./user/queue/sessions
+        </a>
+      </li>
+      <li class="navigation__list__item">
+        <a class="navigation__list__item-text navigation__list__item-text--link" href="#topic-./sessions">
+          
+          <span class="navigation__list__item__topic-indicator navigation__list__item__topic-indicator--publish" title="Publish"></span>
+          
+          ./sessions
+        </a>
+      </li>
+      <li class="navigation__list__item">
+        <a class="navigation__list__item-text navigation__list__item-text--link" href="#topic-./user/queue/sessions.:sessionId">
+          
+          
+          <span class="navigation__list__item__topic-indicator navigation__list__item__topic-indicator--subscribe" title="Subscribe"></span>
+          ./user/queue/sessions.:sessionId
+        </a>
+      </li>
+      <li class="navigation__list__item">
+        <a class="navigation__list__item-text navigation__list__item-text--link" href="#topic-./sessions.:sessionId">
+          
+          <span class="navigation__list__item__topic-indicator navigation__list__item__topic-indicator--publish" title="Publish"></span>
+          
+          ./sessions.:sessionId
+        </a>
+      </li>
+      <li class="navigation__list__item">
+        <a class="navigation__list__item-text navigation__list__item-text--link" href="#topic-./topic/sessions.:sessionId">
+          
+          
+          <span class="navigation__list__item__topic-indicator navigation__list__item__topic-indicator--subscribe" title="Subscribe"></span>
+          ./topic/sessions.:sessionId
+        </a>
+      </li>
+      <li class="navigation__list__item">
+        <a class="navigation__list__item-text navigation__list__item-text--link" href="#topic-./topic/sessions.:sessionId.payload">
+          
+          
+          <span class="navigation__list__item__topic-indicator navigation__list__item__topic-indicator--subscribe" title="Subscribe"></span>
+          ./topic/sessions.:sessionId.payload
+        </a>
+      </li>
+      <li class="navigation__list__item">
+        <a class="navigation__list__item-text navigation__list__item-text--link" href="#topic-./topic/sessions.:sessionId.analytics">
+          
+          
+          <span class="navigation__list__item__topic-indicator navigation__list__item__topic-indicator--subscribe" title="Subscribe"></span>
+          ./topic/sessions.:sessionId.analytics
+        </a>
+      </li>
+      <li class="navigation__list__item">
+        <a class="navigation__list__item-text navigation__list__item-text--link" href="#topic-./topic/sessions.:sessionId.errors">
+          
+          
+          <span class="navigation__list__item__topic-indicator navigation__list__item__topic-indicator--subscribe" title="Subscribe"></span>
+          ./topic/sessions.:sessionId.errors
+        </a>
+      </li>
+    </ul>
+
+    <h2 class="navigation__header">Messages</h2>
+    <ul class="navigation__list">
+      <li clas="navigation__list__item">
+        <a class="navigation__list__item-text navigation__list__item-text--link" href="#message-errorMessage">errorMessage</a>
+      </li>
+      <li clas="navigation__list__item">
+        <a class="navigation__list__item-text navigation__list__item-text--link" href="#message-sessionStatusesCommandMessage">sessionStatusesCommandMessage</a>
+      </li>
+      <li clas="navigation__list__item">
+        <a class="navigation__list__item-text navigation__list__item-text--link" href="#message-sessionManagementCommandMessage">sessionManagementCommandMessage</a>
+      </li>
+      <li clas="navigation__list__item">
+        <a class="navigation__list__item-text navigation__list__item-text--link" href="#message-sessionManagementCommandResultMessage">sessionManagementCommandResultMessage</a>
+      </li>
+      <li clas="navigation__list__item">
+        <a class="navigation__list__item-text navigation__list__item-text--link" href="#message-sessionStatusesCommandResultMessage">sessionStatusesCommandResultMessage</a>
+      </li>
+      <li clas="navigation__list__item">
+        <a class="navigation__list__item-text navigation__list__item-text--link" href="#message-sessionStatusMessage">sessionStatusMessage</a>
+      </li>
+      <li clas="navigation__list__item">
+        <a class="navigation__list__item-text navigation__list__item-text--link" href="#message-sessionsPayloadMessage">sessionsPayloadMessage</a>
+      </li>
+      <li clas="navigation__list__item">
+        <a class="navigation__list__item-text navigation__list__item-text--link" href="#message-sessionsAnalyticsMessage">sessionsAnalyticsMessage</a>
+      </li>
+      <li clas="navigation__list__item">
+        <a class="navigation__list__item-text navigation__list__item-text--link" href="#message-sessionsErrorMessage">sessionsErrorMessage</a>
+      </li>
+    </ul>
+
+    <h2 class="navigation__header">Schemas</h2>
+    <ul class="navigation__list">
+      <li clas="navigation__list__item">
+        <a class="navigation__list__item-text navigation__list__item-text--link" href="#schema-sessionStatus">sessionStatus</a>
+      </li>
+      <li clas="navigation__list__item">
+        <a class="navigation__list__item-text navigation__list__item-text--link" href="#schema-commandResult">commandResult</a>
+      </li>
+      <li clas="navigation__list__item">
+        <a class="navigation__list__item-text navigation__list__item-text--link" href="#schema-commandErrorMessage">commandErrorMessage</a>
+      </li>
+    </ul>
+  </div>
+  <div class="documentation"><a name="info"></a>
+<h1>IoT Data simulator websocket/STOMP API 1.0.0</h1>
+
+<p></p>
+
+
+  <a name="connectionDetails"></a>
+  <h2 class="info__servers__header">Connection details</h2>
+
+  <table class="table">
+    <thead class="table__head">
+      <tr class="table__head__row">
+        <th class="table__head__cell">URL</th>
+        <th class="table__head__cell">Scheme</th>
+        <th class="table__head__cell">Description</th>
+      </tr>
+    </thead>
+    <tbody class="table__body">
+      <tr class="table__body__row">
+        <td class="table__body__cell">services:8080/ws</td>
+        <td class="table__body__cell">stomp</td>
+        <td class="table__body__cell">sessions management API</td>
+      </tr>
+
+
+    </tbody>
+  </table>
+<h2 class="section-header">Topics</h2>
+
+<div class="topic">
+  <a name="topic-./user/queue/error"></a>
+  <h3 class="topic__header">
+
+
+    <span class="operation-badge operation-badge--subscribe topic__header__operation-badge">Subscribe</span>
+
+    ./user/queue/error
+  </h3><p>Services unexpected error message.</p>
+
+
+
+
+<h3>Payload</h3>
+
+<table class="table">
+  <thead class="table__head">
+    <tr class="table__head__row">
+      <th class="table__head__cell">Name</th>
+      <th class="table__head__cell">Type</th>
+      <th class="table__head__cell">Description</th>
+    </tr>
+  </thead>
+  <tbody class="table__body">
+    <tr class="table__body__row">
+      <td class="table__body__cell">message </td>
+      <td class="table__body__cell">string</td>
+      <td class="table__body__cell">error message property</td>
+    </tr>
+  </tbody>
+</table>
+
+
+<h3>Tags</h3>
+
+<div class="tags">
+  <div class="tags__tag">error</div>
+</div>
+</div>
+<div class="topic">
+  <a name="topic-./user/queue/sessions"></a>
+  <h3 class="topic__header">
+
+
+    <span class="operation-badge operation-badge--subscribe topic__header__operation-badge">Subscribe</span>
+
+    ./user/queue/sessions
+  </h3><p>Active sesssions status information.</p>
+
+
+
+
+<h3>Payload</h3>
+
+<table class="table">
+  <thead class="table__head">
+    <tr class="table__head__row">
+      <th class="table__head__cell">Name</th>
+      <th class="table__head__cell">Type</th>
+      <th class="table__head__cell">Description</th>
+    </tr>
+  </thead>
+  <tbody class="table__body">
+    <tr class="table__body__row">
+      <td class="table__body__cell">type </td>
+      <td class="table__body__cell">string</td>
+      <td class="table__body__cell">&quot;sessions_status_command_result&quot; message type</td>
+    </tr>
+    <tr class="table__body__row">
+      <td class="table__body__cell">result </td>
+      <td class="table__body__cell">string</td>
+      <td class="table__body__cell">command processing result. One of the following: &quot;success&quot; | &quot;failure&quot;</td>
+    </tr>
+    <tr class="table__body__row">
+      <td class="table__body__cell">errorMessage </td>
+      <td class="table__body__cell">string</td>
+      <td class="table__body__cell">contains error description in case of result: &quot;failure&quot;</td>
+    </tr>
+    <tr class="table__body__row">
+      <td class="table__body__cell">statuses </td>
+      <td class="table__body__cell">array(object)</td>
+      <td class="table__body__cell">active sessions statuses</td>
+    </tr>
+        <tr class="table__body__row">
+          <td class="table__body__cell"><span class="tree-space"></span><span class="tree-leaf"></span>sessionId </td>
+          <td class="table__body__cell">string</td>
+          <td class="table__body__cell">session id property</td>
+        </tr>
+        <tr class="table__body__row">
+          <td class="table__body__cell"><span class="tree-space"></span><span class="tree-leaf"></span>state </td>
+          <td class="table__body__cell">string</td>
+          <td class="table__body__cell">current active session state. One of the following: &quot;running&quot; | &quot;paused&quot; | &quot;completed&quot; | &quot;failed&quot;</td>
+        </tr>
+        <tr class="table__body__row">
+          <td class="table__body__cell"><span class="tree-space"></span><span class="tree-leaf"></span>errors </td>
+          <td class="table__body__cell">array(string)</td>
+          <td class="table__body__cell">contains session errors in case of session state &quot;failed&quot;</td>
+        </tr>
+  </tbody>
+</table>
+
+
+<h3>Tags</h3>
+
+<div class="tags">
+  <div class="tags__tag">session</div>
+  <div class="tags__tag">status</div>
+  <div class="tags__tag">command</div>
+  <div class="tags__tag">result</div>
+</div>
+</div>
+<div class="topic">
+  <a name="topic-./sessions"></a>
+  <h3 class="topic__header">
+
+    <span class="operation-badge operation-badge--publish topic__header__operation-badge">Publish</span>
+
+
+    ./sessions
+  </h3><p>An empty message to trigger provision of all active sessions statuses.</p>
+
+
+
+
+<h3>Payload</h3>
+
+<table class="table">
+  <thead class="table__head">
+    <tr class="table__head__row">
+      <th class="table__head__cell">Name</th>
+      <th class="table__head__cell">Type</th>
+      <th class="table__head__cell">Description</th>
+    </tr>
+  </thead>
+  <tbody class="table__body">
+  </tbody>
+</table>
+
+
+<h3>Tags</h3>
+
+<div class="tags">
+  <div class="tags__tag">sessions</div>
+  <div class="tags__tag">status</div>
+  <div class="tags__tag">command</div>
+</div>
+</div>
+<div class="topic">
+  <a name="topic-./user/queue/sessions.:sessionId"></a>
+  <h3 class="topic__header">
+
+
+    <span class="operation-badge operation-badge--subscribe topic__header__operation-badge">Subscribe</span>
+
+    ./user/queue/sessions.:sessionId
+  </h3><p>Active sesssion managemnt command result.</p>
+
+
+
+
+<h3>Payload</h3>
+
+<table class="table">
+  <thead class="table__head">
+    <tr class="table__head__row">
+      <th class="table__head__cell">Name</th>
+      <th class="table__head__cell">Type</th>
+      <th class="table__head__cell">Description</th>
+    </tr>
+  </thead>
+  <tbody class="table__body">
+    <tr class="table__body__row">
+      <td class="table__body__cell">type </td>
+      <td class="table__body__cell">string</td>
+      <td class="table__body__cell">&quot;session_management_command_result&quot; message type</td>
+    </tr>
+    <tr class="table__body__row">
+      <td class="table__body__cell">sessionId </td>
+      <td class="table__body__cell">string</td>
+      <td class="table__body__cell">session id property</td>
+    </tr>
+    <tr class="table__body__row">
+      <td class="table__body__cell">result </td>
+      <td class="table__body__cell">string</td>
+      <td class="table__body__cell">command processing result. One of the following: &quot;success&quot; | &quot;failure&quot;</td>
+    </tr>
+    <tr class="table__body__row">
+      <td class="table__body__cell">errorMessage </td>
+      <td class="table__body__cell">string</td>
+      <td class="table__body__cell">contains error description in case of result: &quot;failure&quot;</td>
+    </tr>
+  </tbody>
+</table>
+
+
+<h3>Tags</h3>
+
+<div class="tags">
+  <div class="tags__tag">sessions</div>
+  <div class="tags__tag">management</div>
+  <div class="tags__tag">command</div>
+  <div class="tags__tag">result</div>
+</div>
+</div>
+<div class="topic">
+  <a name="topic-./sessions.:sessionId"></a>
+  <h3 class="topic__header">
+
+    <span class="operation-badge operation-badge--publish topic__header__operation-badge">Publish</span>
+
+
+    ./sessions.:sessionId
+  </h3><p>Message to manage session execution.</p>
+
+
+
+
+<h3>Payload</h3>
+
+<table class="table">
+  <thead class="table__head">
+    <tr class="table__head__row">
+      <th class="table__head__cell">Name</th>
+      <th class="table__head__cell">Type</th>
+      <th class="table__head__cell">Description</th>
+    </tr>
+  </thead>
+  <tbody class="table__body">
+    <tr class="table__body__row">
+      <td class="table__body__cell">sessionId </td>
+      <td class="table__body__cell">string</td>
+      <td class="table__body__cell">session id property</td>
+    </tr>
+    <tr class="table__body__row">
+      <td class="table__body__cell">command </td>
+      <td class="table__body__cell">string</td>
+      <td class="table__body__cell">session management command. One of the following: &quot;start&quot; | &quot;pause&quot; | &quot;stop&quot; | &quot;restart&quot;</td>
+    </tr>
+  </tbody>
+</table>
+
+
+<h3>Tags</h3>
+
+<div class="tags">
+  <div class="tags__tag">sessions</div>
+  <div class="tags__tag">management</div>
+  <div class="tags__tag">command</div>
+</div>
+</div>
+<div class="topic">
+  <a name="topic-./topic/sessions.:sessionId"></a>
+  <h3 class="topic__header">
+
+
+    <span class="operation-badge operation-badge--subscribe topic__header__operation-badge">Subscribe</span>
+
+    ./topic/sessions.:sessionId
+  </h3><p>Active sesssions status result message.</p>
+
+
+
+
+<h3>Payload</h3>
+
+<table class="table">
+  <thead class="table__head">
+    <tr class="table__head__row">
+      <th class="table__head__cell">Name</th>
+      <th class="table__head__cell">Type</th>
+      <th class="table__head__cell">Description</th>
+    </tr>
+  </thead>
+  <tbody class="table__body">
+    <tr class="table__body__row">
+      <td class="table__body__cell">type </td>
+      <td class="table__body__cell">string</td>
+      <td class="table__body__cell">&quot;session_status&quot; message type</td>
+    </tr>
+    <tr class="table__body__row">
+      <td class="table__body__cell">status </td>
+      <td class="table__body__cell">object</td>
+      <td class="table__body__cell"></td>
+    </tr>
+      <tr class="table__body__row">
+        <td class="table__body__cell"><span class="tree-space"></span><span class="tree-leaf"></span>sessionId </td>
+        <td class="table__body__cell">string</td>
+        <td class="table__body__cell">session id property</td>
+      </tr>
+      <tr class="table__body__row">
+        <td class="table__body__cell"><span class="tree-space"></span><span class="tree-leaf"></span>state </td>
+        <td class="table__body__cell">string</td>
+        <td class="table__body__cell">current active session state. One of the following: &quot;running&quot; | &quot;paused&quot; | &quot;completed&quot; | &quot;failed&quot;</td>
+      </tr>
+      <tr class="table__body__row">
+        <td class="table__body__cell"><span class="tree-space"></span><span class="tree-leaf"></span>errors </td>
+        <td class="table__body__cell">array(string)</td>
+        <td class="table__body__cell">contains session errors in case of session state &quot;failed&quot;</td>
+      </tr>
+  </tbody>
+</table>
+
+
+<h3>Tags</h3>
+
+<div class="tags">
+  <div class="tags__tag">session</div>
+  <div class="tags__tag">status</div>
+</div>
+</div>
+<div class="topic">
+  <a name="topic-./topic/sessions.:sessionId.payload"></a>
+  <h3 class="topic__header">
+
+
+    <span class="operation-badge operation-badge--subscribe topic__header__operation-badge">Subscribe</span>
+
+    ./topic/sessions.:sessionId.payload
+  </h3><p>Active sesssions processed payload message.</p>
+
+
+
+
+<h3>Payload</h3>
+
+<table class="table">
+  <thead class="table__head">
+    <tr class="table__head__row">
+      <th class="table__head__cell">Name</th>
+      <th class="table__head__cell">Type</th>
+      <th class="table__head__cell">Description</th>
+    </tr>
+  </thead>
+  <tbody class="table__body">
+    <tr class="table__body__row">
+      <td class="table__body__cell">type </td>
+      <td class="table__body__cell">string</td>
+      <td class="table__body__cell">&quot;session_payload&quot; message type</td>
+    </tr>
+    <tr class="table__body__row">
+      <td class="table__body__cell">sessionId </td>
+      <td class="table__body__cell">string</td>
+      <td class="table__body__cell">session id property</td>
+    </tr>
+    <tr class="table__body__row">
+      <td class="table__body__cell">message </td>
+      <td class="table__body__cell">string</td>
+      <td class="table__body__cell">session payload message which has been successfully sent to external target system</td>
+    </tr>
+    <tr class="table__body__row">
+      <td class="table__body__cell">timestamp </td>
+      <td class="table__body__cell">number</td>
+      <td class="table__body__cell">unix format timestamp</td>
+    </tr>
+  </tbody>
+</table>
+
+
+<h3>Tags</h3>
+
+<div class="tags">
+  <div class="tags__tag">session</div>
+  <div class="tags__tag">payload</div>
+</div>
+</div>
+<div class="topic">
+  <a name="topic-./topic/sessions.:sessionId.analytics"></a>
+  <h3 class="topic__header">
+
+
+    <span class="operation-badge operation-badge--subscribe topic__header__operation-badge">Subscribe</span>
+
+    ./topic/sessions.:sessionId.analytics
+  </h3><p>Active sesssion analytics message.</p>
+
+
+
+
+<h3>Payload</h3>
+
+<table class="table">
+  <thead class="table__head">
+    <tr class="table__head__row">
+      <th class="table__head__cell">Name</th>
+      <th class="table__head__cell">Type</th>
+      <th class="table__head__cell">Description</th>
+    </tr>
+  </thead>
+  <tbody class="table__body">
+    <tr class="table__body__row">
+      <td class="table__body__cell">type </td>
+      <td class="table__body__cell">string</td>
+      <td class="table__body__cell">&quot;session_analytics&quot; message type</td>
+    </tr>
+    <tr class="table__body__row">
+      <td class="table__body__cell">tag </td>
+      <td class="table__body__cell">string</td>
+      <td class="table__body__cell">session analytics tag. One of the following: &quot;sessions_started&quot; | &quot;session_completed&quot; | &quot;session_paused&quot; | &quot;session_failed&quot;</td>
+    </tr>
+    <tr class="table__body__row">
+      <td class="table__body__cell">sessionId </td>
+      <td class="table__body__cell">string</td>
+      <td class="table__body__cell">session id property</td>
+    </tr>
+    <tr class="table__body__row">
+      <td class="table__body__cell">message </td>
+      <td class="table__body__cell">string</td>
+      <td class="table__body__cell">session analytics message</td>
+    </tr>
+    <tr class="table__body__row">
+      <td class="table__body__cell">timestamp </td>
+      <td class="table__body__cell">number</td>
+      <td class="table__body__cell">unix format timestamp</td>
+    </tr>
+  </tbody>
+</table>
+
+
+<h3>Tags</h3>
+
+<div class="tags">
+  <div class="tags__tag">session</div>
+  <div class="tags__tag">analytics</div>
+</div>
+</div>
+<div class="topic">
+  <a name="topic-./topic/sessions.:sessionId.errors"></a>
+  <h3 class="topic__header">
+
+
+    <span class="operation-badge operation-badge--subscribe topic__header__operation-badge">Subscribe</span>
+
+    ./topic/sessions.:sessionId.errors
+  </h3><p>Active sesssion error message.</p>
+
+
+
+
+<h3>Payload</h3>
+
+<table class="table">
+  <thead class="table__head">
+    <tr class="table__head__row">
+      <th class="table__head__cell">Name</th>
+      <th class="table__head__cell">Type</th>
+      <th class="table__head__cell">Description</th>
+    </tr>
+  </thead>
+  <tbody class="table__body">
+    <tr class="table__body__row">
+      <td class="table__body__cell">type </td>
+      <td class="table__body__cell">string</td>
+      <td class="table__body__cell">&quot;session_error&quot; message type</td>
+    </tr>
+    <tr class="table__body__row">
+      <td class="table__body__cell">sessionId </td>
+      <td class="table__body__cell">string</td>
+      <td class="table__body__cell">session id property</td>
+    </tr>
+    <tr class="table__body__row">
+      <td class="table__body__cell">message </td>
+      <td class="table__body__cell">string</td>
+      <td class="table__body__cell">error message</td>
+    </tr>
+    <tr class="table__body__row">
+      <td class="table__body__cell">timestamp </td>
+      <td class="table__body__cell">number</td>
+      <td class="table__body__cell">unix format timestamp</td>
+    </tr>
+  </tbody>
+</table>
+
+
+<h3>Tags</h3>
+
+<div class="tags">
+  <div class="tags__tag">session</div>
+  <div class="tags__tag">error</div>
+</div>
+</div>
+<h2 class="section-header">Messages</h2>
+
+  <a name="message-errorMessage"></a>
+  <div class="message">
+    <h3 class="message__header">
+      errorMessage
+    </h3>
+    <p>Services unexpected error message.</p>
+  
+    
+  
+    <h4>Payload</h4>
+  
+    <table class="table">
+      <thead class="table__head">
+        <tr class="table__head__row">
+          <th class="table__head__cell">Name</th>
+          <th class="table__head__cell">Type</th>
+          <th class="table__head__cell">Description</th>
+        </tr>
+      </thead>
+      <tbody class="table__body">
+          <tr class="table__body__row">
+            <td class="table__body__cell">message </td>
+            <td class="table__body__cell">string</td>
+            <td class="table__body__cell">error message property</td>
+          </tr>
+      </tbody>
+    </table>
+  
+  </div>
+  <a name="message-sessionStatusesCommandMessage"></a>
+  <div class="message">
+    <h3 class="message__header">
+      sessionStatusesCommandMessage
+    </h3>
+    <p>An empty message to trigger provision of all active sessions statuses.</p>
+  
+    
+  
+    <h4>Payload</h4>
+  
+    <table class="table">
+      <thead class="table__head">
+        <tr class="table__head__row">
+          <th class="table__head__cell">Name</th>
+          <th class="table__head__cell">Type</th>
+          <th class="table__head__cell">Description</th>
+        </tr>
+      </thead>
+      <tbody class="table__body">
+          <tr class="table__body__row">
+            <td class="table__body__cell">sessionStatusesCommandMessage </td>
+            <td class="table__body__cell"></td>
+            <td class="table__body__cell"></td>
+          </tr>
+      </tbody>
+    </table>
+  
+  </div>
+  <a name="message-sessionManagementCommandMessage"></a>
+  <div class="message">
+    <h3 class="message__header">
+      sessionManagementCommandMessage
+    </h3>
+    <p>Message to manage session execution.</p>
+  
+    
+  
+    <h4>Payload</h4>
+  
+    <table class="table">
+      <thead class="table__head">
+        <tr class="table__head__row">
+          <th class="table__head__cell">Name</th>
+          <th class="table__head__cell">Type</th>
+          <th class="table__head__cell">Description</th>
+        </tr>
+      </thead>
+      <tbody class="table__body">
+          <tr class="table__body__row">
+            <td class="table__body__cell">sessionId </td>
+            <td class="table__body__cell">string</td>
+            <td class="table__body__cell">session id property</td>
+          </tr>
+          <tr class="table__body__row">
+            <td class="table__body__cell">command </td>
+            <td class="table__body__cell">string</td>
+            <td class="table__body__cell">session management command. One of the following: &quot;start&quot; | &quot;pause&quot; | &quot;stop&quot; | &quot;restart&quot;</td>
+          </tr>
+      </tbody>
+    </table>
+  
+  </div>
+  <a name="message-sessionManagementCommandResultMessage"></a>
+  <div class="message">
+    <h3 class="message__header">
+      sessionManagementCommandResultMessage
+    </h3>
+    <p>Active sesssion managemnt command result.</p>
+  
+    
+  
+    <h4>Payload</h4>
+  
+    <table class="table">
+      <thead class="table__head">
+        <tr class="table__head__row">
+          <th class="table__head__cell">Name</th>
+          <th class="table__head__cell">Type</th>
+          <th class="table__head__cell">Description</th>
+        </tr>
+      </thead>
+      <tbody class="table__body">
+          <tr class="table__body__row">
+            <td class="table__body__cell">type </td>
+            <td class="table__body__cell">string</td>
+            <td class="table__body__cell">&quot;session_management_command_result&quot; message type</td>
+          </tr>
+          <tr class="table__body__row">
+            <td class="table__body__cell">sessionId </td>
+            <td class="table__body__cell">string</td>
+            <td class="table__body__cell">session id property</td>
+          </tr>
+          <tr class="table__body__row">
+            <td class="table__body__cell">result </td>
+            <td class="table__body__cell">string</td>
+            <td class="table__body__cell">command processing result. One of the following: &quot;success&quot; | &quot;failure&quot;</td>
+          </tr>
+          <tr class="table__body__row">
+            <td class="table__body__cell">errorMessage </td>
+            <td class="table__body__cell">string</td>
+            <td class="table__body__cell">contains error description in case of result: &quot;failure&quot;</td>
+          </tr>
+      </tbody>
+    </table>
+  
+  </div>
+  <a name="message-sessionStatusesCommandResultMessage"></a>
+  <div class="message">
+    <h3 class="message__header">
+      sessionStatusesCommandResultMessage
+    </h3>
+    <p>Active sesssions status information.</p>
+  
+    
+  
+    <h4>Payload</h4>
+  
+    <table class="table">
+      <thead class="table__head">
+        <tr class="table__head__row">
+          <th class="table__head__cell">Name</th>
+          <th class="table__head__cell">Type</th>
+          <th class="table__head__cell">Description</th>
+        </tr>
+      </thead>
+      <tbody class="table__body">
+          <tr class="table__body__row">
+            <td class="table__body__cell">type </td>
+            <td class="table__body__cell">string</td>
+            <td class="table__body__cell">&quot;sessions_status_command_result&quot; message type</td>
+          </tr>
+          <tr class="table__body__row">
+            <td class="table__body__cell">result </td>
+            <td class="table__body__cell">string</td>
+            <td class="table__body__cell">command processing result. One of the following: &quot;success&quot; | &quot;failure&quot;</td>
+          </tr>
+          <tr class="table__body__row">
+            <td class="table__body__cell">errorMessage </td>
+            <td class="table__body__cell">string</td>
+            <td class="table__body__cell">contains error description in case of result: &quot;failure&quot;</td>
+          </tr>
+          <tr class="table__body__row">
+            <td class="table__body__cell">statuses </td>
+            <td class="table__body__cell">array(object)</td>
+            <td class="table__body__cell">active sessions statuses</td>
+          </tr>
+              <tr class="table__body__row">
+                <td class="table__body__cell"><span class="tree-space"></span><span class="tree-leaf"></span>sessionId </td>
+                <td class="table__body__cell">string</td>
+                <td class="table__body__cell">session id property</td>
+              </tr>
+              <tr class="table__body__row">
+                <td class="table__body__cell"><span class="tree-space"></span><span class="tree-leaf"></span>state </td>
+                <td class="table__body__cell">string</td>
+                <td class="table__body__cell">current active session state. One of the following: &quot;running&quot; | &quot;paused&quot; | &quot;completed&quot; | &quot;failed&quot;</td>
+              </tr>
+              <tr class="table__body__row">
+                <td class="table__body__cell"><span class="tree-space"></span><span class="tree-leaf"></span>errors </td>
+                <td class="table__body__cell">array(string)</td>
+                <td class="table__body__cell">contains session errors in case of session state &quot;failed&quot;</td>
+              </tr>
+      </tbody>
+    </table>
+  
+  </div>
+  <a name="message-sessionStatusMessage"></a>
+  <div class="message">
+    <h3 class="message__header">
+      sessionStatusMessage
+    </h3>
+    <p>Active sesssions status result message.</p>
+  
+    
+  
+    <h4>Payload</h4>
+  
+    <table class="table">
+      <thead class="table__head">
+        <tr class="table__head__row">
+          <th class="table__head__cell">Name</th>
+          <th class="table__head__cell">Type</th>
+          <th class="table__head__cell">Description</th>
+        </tr>
+      </thead>
+      <tbody class="table__body">
+          <tr class="table__body__row">
+            <td class="table__body__cell">type </td>
+            <td class="table__body__cell">string</td>
+            <td class="table__body__cell">&quot;session_status&quot; message type</td>
+          </tr>
+          <tr class="table__body__row">
+            <td class="table__body__cell">status </td>
+            <td class="table__body__cell">object</td>
+            <td class="table__body__cell"></td>
+          </tr>
+            <tr class="table__body__row">
+              <td class="table__body__cell"><span class="tree-space"></span><span class="tree-leaf"></span>sessionId </td>
+              <td class="table__body__cell">string</td>
+              <td class="table__body__cell">session id property</td>
+            </tr>
+            <tr class="table__body__row">
+              <td class="table__body__cell"><span class="tree-space"></span><span class="tree-leaf"></span>state </td>
+              <td class="table__body__cell">string</td>
+              <td class="table__body__cell">current active session state. One of the following: &quot;running&quot; | &quot;paused&quot; | &quot;completed&quot; | &quot;failed&quot;</td>
+            </tr>
+            <tr class="table__body__row">
+              <td class="table__body__cell"><span class="tree-space"></span><span class="tree-leaf"></span>errors </td>
+              <td class="table__body__cell">array(string)</td>
+              <td class="table__body__cell">contains session errors in case of session state &quot;failed&quot;</td>
+            </tr>
+      </tbody>
+    </table>
+  
+  </div>
+  <a name="message-sessionsPayloadMessage"></a>
+  <div class="message">
+    <h3 class="message__header">
+      sessionsPayloadMessage
+    </h3>
+    <p>Active sesssions processed payload message.</p>
+  
+    
+  
+    <h4>Payload</h4>
+  
+    <table class="table">
+      <thead class="table__head">
+        <tr class="table__head__row">
+          <th class="table__head__cell">Name</th>
+          <th class="table__head__cell">Type</th>
+          <th class="table__head__cell">Description</th>
+        </tr>
+      </thead>
+      <tbody class="table__body">
+          <tr class="table__body__row">
+            <td class="table__body__cell">type </td>
+            <td class="table__body__cell">string</td>
+            <td class="table__body__cell">&quot;session_payload&quot; message type</td>
+          </tr>
+          <tr class="table__body__row">
+            <td class="table__body__cell">sessionId </td>
+            <td class="table__body__cell">string</td>
+            <td class="table__body__cell">session id property</td>
+          </tr>
+          <tr class="table__body__row">
+            <td class="table__body__cell">message </td>
+            <td class="table__body__cell">string</td>
+            <td class="table__body__cell">session payload message which has been successfully sent to external target system</td>
+          </tr>
+          <tr class="table__body__row">
+            <td class="table__body__cell">timestamp </td>
+            <td class="table__body__cell">number</td>
+            <td class="table__body__cell">unix format timestamp</td>
+          </tr>
+      </tbody>
+    </table>
+  
+  </div>
+  <a name="message-sessionsAnalyticsMessage"></a>
+  <div class="message">
+    <h3 class="message__header">
+      sessionsAnalyticsMessage
+    </h3>
+    <p>Active sesssion analytics message.</p>
+  
+    
+  
+    <h4>Payload</h4>
+  
+    <table class="table">
+      <thead class="table__head">
+        <tr class="table__head__row">
+          <th class="table__head__cell">Name</th>
+          <th class="table__head__cell">Type</th>
+          <th class="table__head__cell">Description</th>
+        </tr>
+      </thead>
+      <tbody class="table__body">
+          <tr class="table__body__row">
+            <td class="table__body__cell">type </td>
+            <td class="table__body__cell">string</td>
+            <td class="table__body__cell">&quot;session_analytics&quot; message type</td>
+          </tr>
+          <tr class="table__body__row">
+            <td class="table__body__cell">tag </td>
+            <td class="table__body__cell">string</td>
+            <td class="table__body__cell">session analytics tag. One of the following: &quot;sessions_started&quot; | &quot;session_completed&quot; | &quot;session_paused&quot; | &quot;session_failed&quot;</td>
+          </tr>
+          <tr class="table__body__row">
+            <td class="table__body__cell">sessionId </td>
+            <td class="table__body__cell">string</td>
+            <td class="table__body__cell">session id property</td>
+          </tr>
+          <tr class="table__body__row">
+            <td class="table__body__cell">message </td>
+            <td class="table__body__cell">string</td>
+            <td class="table__body__cell">session analytics message</td>
+          </tr>
+          <tr class="table__body__row">
+            <td class="table__body__cell">timestamp </td>
+            <td class="table__body__cell">number</td>
+            <td class="table__body__cell">unix format timestamp</td>
+          </tr>
+      </tbody>
+    </table>
+  
+  </div>
+  <a name="message-sessionsErrorMessage"></a>
+  <div class="message">
+    <h3 class="message__header">
+      sessionsErrorMessage
+    </h3>
+    <p>Active sesssion error message.</p>
+  
+    
+  
+    <h4>Payload</h4>
+  
+    <table class="table">
+      <thead class="table__head">
+        <tr class="table__head__row">
+          <th class="table__head__cell">Name</th>
+          <th class="table__head__cell">Type</th>
+          <th class="table__head__cell">Description</th>
+        </tr>
+      </thead>
+      <tbody class="table__body">
+          <tr class="table__body__row">
+            <td class="table__body__cell">type </td>
+            <td class="table__body__cell">string</td>
+            <td class="table__body__cell">&quot;session_error&quot; message type</td>
+          </tr>
+          <tr class="table__body__row">
+            <td class="table__body__cell">sessionId </td>
+            <td class="table__body__cell">string</td>
+            <td class="table__body__cell">session id property</td>
+          </tr>
+          <tr class="table__body__row">
+            <td class="table__body__cell">message </td>
+            <td class="table__body__cell">string</td>
+            <td class="table__body__cell">error message</td>
+          </tr>
+          <tr class="table__body__row">
+            <td class="table__body__cell">timestamp </td>
+            <td class="table__body__cell">number</td>
+            <td class="table__body__cell">unix format timestamp</td>
+          </tr>
+      </tbody>
+    </table>
+  
+  </div>
+<h2 class="section-header">Schemas</h2>
+
+  <a name="schema-sessionStatus"></a>
+  <div class="schema">
+    <h3>sessionStatus</h3>
+  
+    <table class="table">
+      <thead class="table__head">
+        <tr class="table__head__row">
+          <th class="table__head__cell">Name</th>
+          <th class="table__head__cell">Title</th>
+          <th class="table__head__cell">Type</th>
+          <th class="table__head__cell">Format</th>
+          <th class="table__head__cell">Default</th>
+          <th class="table__head__cell">Description</th>
+        </tr>
+      </thead>
+      <tbody class="table__body">
+          <tr class="table__body__row">
+            <td class="table__body__cell">sessionId </td>
+            <td class="table__body__cell"></td>
+            <td class="table__body__cell">string</td>
+            <td class="table__body__cell"></td>
+            <td class="table__body__cell"></td>
+            <td class="table__body__cell">session id property</td>
+          </tr>
+          <tr class="table__body__row">
+            <td class="table__body__cell">state </td>
+            <td class="table__body__cell"></td>
+            <td class="table__body__cell">string</td>
+            <td class="table__body__cell"></td>
+            <td class="table__body__cell"></td>
+            <td class="table__body__cell">current active session state. One of the following: &quot;running&quot; | &quot;paused&quot; | &quot;completed&quot; | &quot;failed&quot;</td>
+          </tr>
+          <tr class="table__body__row">
+            <td class="table__body__cell">errors </td>
+            <td class="table__body__cell"></td>
+            <td class="table__body__cell">array(string)</td>
+            <td class="table__body__cell"></td>
+            <td class="table__body__cell"></td>
+            <td class="table__body__cell">contains session errors in case of session state &quot;failed&quot;</td>
+          </tr>
+      </tbody>
+    </table>
+  
+  </div>
+  <a name="schema-commandResult"></a>
+  <div class="schema">
+    <h3>commandResult</h3>
+  
+    <table class="table">
+      <thead class="table__head">
+        <tr class="table__head__row">
+          <th class="table__head__cell">Name</th>
+          <th class="table__head__cell">Title</th>
+          <th class="table__head__cell">Type</th>
+          <th class="table__head__cell">Format</th>
+          <th class="table__head__cell">Default</th>
+          <th class="table__head__cell">Description</th>
+        </tr>
+      </thead>
+      <tbody class="table__body">
+          <tr class="table__body__row">
+            <td class="table__body__cell">commandResult </td>
+            <td class="table__body__cell"></td>
+            <td class="table__body__cell">string</td>
+            <td class="table__body__cell"></td>
+            <td class="table__body__cell"></td>
+            <td class="table__body__cell">command processing result. One of the following: &quot;success&quot; | &quot;failure&quot;</td>
+          </tr>
+      </tbody>
+    </table>
+  
+  </div>
+  <a name="schema-commandErrorMessage"></a>
+  <div class="schema">
+    <h3>commandErrorMessage</h3>
+  
+    <table class="table">
+      <thead class="table__head">
+        <tr class="table__head__row">
+          <th class="table__head__cell">Name</th>
+          <th class="table__head__cell">Title</th>
+          <th class="table__head__cell">Type</th>
+          <th class="table__head__cell">Format</th>
+          <th class="table__head__cell">Default</th>
+          <th class="table__head__cell">Description</th>
+        </tr>
+      </thead>
+      <tbody class="table__body">
+          <tr class="table__body__row">
+            <td class="table__body__cell">commandErrorMessage </td>
+            <td class="table__body__cell"></td>
+            <td class="table__body__cell">string</td>
+            <td class="table__body__cell"></td>
+            <td class="table__body__cell"></td>
+            <td class="table__body__cell">contains error description in case of result: &quot;failure&quot;</td>
+          </tr>
+      </tbody>
+    </table>
+  
+  </div>
+</div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js" type="application/javascript"></script>
+  <script type="application/javascript">
+    function removeCurrentLinkSelection () {
+      var links = document.querySelectorAll('.navigation__list__item-text--link');
+      if (!links) return;
+
+      for (var i=0; i < links.length; i++) {
+        links[i].classList.remove('navigation__list__item-text--link--active');
+      }
+    }
+
+    function selectCurrentLink () {
+      removeCurrentLinkSelection();
+
+      var hash = window.location.hash;
+      if (!hash) return;
+
+      var link = document.querySelector("a[href='"+hash+"']");
+      if (!link) return;
+
+      link.classList.add('navigation__list__item-text--link--active');
+    }
+
+    function highlightCode () {
+      var blocks = document.querySelectorAll('.hljs code');
+
+      for(var i=0; i < blocks.length; i++) {
+        hljs.highlightBlock(blocks[i]);
+      }
+    }
+
+    function bindExpandButtons () {
+      var buttons = document.querySelectorAll('.table__expand');
+
+      for(var i=0; i < buttons.length; i++) {
+        buttons[i].addEventListener('click', function (e) {
+          var tableRow = document.querySelector('[data-nested-index="' + e.target.attributes['data-index'].value + '"]');
+          tableRow.classList.toggle('table__body__row--with-nested--expanded');
+          e.target.classList.toggle('table__expand--open');
+        });
+      }
+    }
+
+    window.addEventListener('hashchange', selectCurrentLink);
+    window.addEventListener('load', selectCurrentLink);
+    window.addEventListener('load', highlightCode);
+    window.addEventListener('load', bindExpandButtons);
+  </script>
+</body>
+</html>

@@ -1,0 +1,157 @@
+<html>
+<head>
+<title>ws client</title>
+<script src="https://cdn.jsdelivr.net/sockjs/1.0.0/sockjs.min.js"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.js"></script>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script type="text/javascript" src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+<style type="text/css">
+body {
+	font-size: 20px;
+}
+
+.container, .container>div {
+	padding-top: 10px;
+}
+
+.form-control {
+	height: 50px;
+	font-size: 20px;
+}
+
+.btn-primary {
+	margin-top: 10px;
+}
+
+.col-xs-6 {
+	overflow: hidden;
+}
+
+.col-xs-6>div {
+	padding-top: 15px;
+}
+
+.col-xs-6 button {
+	margin-top: 10px;
+	float: right;
+}
+
+textarea {
+	margin-top: 30px;
+}
+</style>
+
+</head>
+<body>
+	<div class="container">
+		<div>
+			<label for="url">URL: </label><input class="form-control" type="text" id="url" value="http://localhost:8080/ws"/>
+		</div>
+		<div class="clearfix">
+			<div class="pull-right">
+				<button class="btn btn-lg btn-success" id="connect">Connect</button>
+				<button class="btn btn-lg btn-danger" id="disconnect" disabled="disabled">Disconnect</button>
+			</div>
+		</div>
+		<div class="row">
+			<div id="queryDiv" class="col-xs-6">
+				<div><label for="query">Query:</label><input class="form-control" type="text" id="query" /></div>
+				<div><label for="path">Path:</label><input class="form-control" type="text" id="path"/></div>
+				<button class="btn btn-lg btn-primary" id="sendQuery">Send</button>
+			</div>
+			<div id="subscriptionDiv" class="col-xs-6">
+				<div><label for="subscribtion">Subscription:</label><input class="form-control" type="text" id="subscribtion"/></div>
+				<button class="btn btn-lg btn-primary" id="subscribe">Subscribe</button>
+			</div>
+		</div>
+		<div>
+			<textarea class="form-control" id="response" rows="15"></textarea>
+			<button class="btn btn-lg btn-primary" id="clearTextArea">Clear</button>
+		</div>
+		<input id="scc" type="hidden" name="${_csrf.parameterName}"
+			value="${_csrf.token}">
+
+
+<script type="text/javascript">
+var stompClient = null;
+
+function setConnected(connected) {
+	document.getElementById('connect').disabled = connected;
+	document.getElementById('disconnect').disabled = !connected;
+	document.getElementById('response').text = '';
+}		
+
+function showResponse(message) {
+	var $response = $('#response');
+	if($response.val()){
+		$response.append('\n\n');
+	}
+	$response.append(message);
+}
+
+$(function(){
+
+	$('#connect').click(function() {
+		var url = $('#url').val();
+		if(url === ""){
+			showResponse("Enter url! (e.g. https://localhost:8080/ResolutionRoomsBackend/hello)");
+			return false;
+		}
+		var socket = new SockJS(url);
+		stompClient = Stomp.over(socket);
+
+		stompClient.connect(
+						{},
+						function(frame) {
+							setConnected(true);
+							showResponse('Connected: ' + frame);
+						});
+	});
+
+	$('#disconnect').click(function() {
+		stompClient.disconnect();
+		setConnected(false);
+		showResponse("Disconnected");
+	});
+
+	var requestId = 1;
+	$('#sendQuery').click(function(){
+		var query = $('#query').val();
+		var path = $('#path').val();
+		if(path === ""){
+			showResponse("Enter controller path! (e.g. /app/hello)");
+			return false;
+		}
+		
+		var headers = {
+                requestId: ++requestId
+        }
+
+		stompClient.send(path, headers, query);
+	});
+
+	$('#subscribe').click(function(){
+		var destination = $('#subscribtion').val();
+		if(destination === ""){
+			showResponse("Enter subscription path! (e.g. /topic/greetings)");
+			return false;
+		}
+		stompClient.subscribe(destination,
+			function(response) {
+				showResponse(response.body);
+			});
+		showResponse("Subscription N: " + stompClient.counter + "\ndestination: " + destination);
+	});
+
+	$('#clearTextArea').click(function(){
+		$('#response').text("");
+	});
+});
+</script>
+
+	</div>
+</body>
+</html>

@@ -18,6 +18,9 @@ Simulator **features** that you will like:
 
 If you would like read more about why we created this tool, please read **Motivation** section.
 
+## Introduction video
+https://www.youtube.com/playlist?list=PLkiB-GyDBMbfA7AbenLUpvYZKeyuqlBPy
+
 ## Installation
 
 **Prerequisites**

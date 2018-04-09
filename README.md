@@ -1,11 +1,8 @@
+[![Join the chat at https://gitter.im/IoT-data-simulator/Lobby](https://badges.gitter.im/IoT-data-simulator/Lobby.svg)](https://gitter.im/IoT-data-simulator/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-
-
-![enter image description here](https://github.com/evgenys91/iot-data-simulator-docs/blob/master/branding.png?raw=true)
+![](https://github.com/evgenys91/iot-data-simulator-docs/blob/master/branding.png?raw=true)
 
 ----------
-
-[![Join the chat at https://gitter.im/IoT-data-simulator/Lobby](https://badges.gitter.im/IoT-data-simulator/Lobby.svg)](https://gitter.im/IoT-data-simulator/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 IoT-data-simulator is the tool which allows you to simulate IoT devices data with great flexibility. With this tool you won't need to code another new simulator for each IoT project.
 
 ![enter image description here](https://github.com/evgenys91/iot-data-simulator-docs/blob/master/demo.gif?raw=true)

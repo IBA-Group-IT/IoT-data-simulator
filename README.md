@@ -1,11 +1,11 @@
 [![Join the chat at https://gitter.im/IoT-data-simulator/Lobby](https://badges.gitter.im/IoT-data-simulator/Lobby.svg)](https://gitter.im/IoT-data-simulator/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-![](https://github.com/evgenys91/iot-data-simulator-docs/blob/master/branding.png?raw=true)
+![branding](https://user-images.githubusercontent.com/4072962/38543709-fb04c520-3cad-11e8-8e23-0bb1155f16ae.png)
 
 ----------
 IoT-data-simulator is the tool which allows you to simulate IoT devices data with great flexibility. With this tool you won't need to code another new simulator for each IoT project.
 
-![enter image description here](https://github.com/evgenys91/iot-data-simulator-docs/blob/master/demo.gif?raw=true)
+![demo](https://user-images.githubusercontent.com/4072962/38543721-023134b4-3cae-11e8-8e97-ee6468771e2a.gif)
 
 Simulator **features** that you will like:
 1. Replay existing datasets with modified data (such as updated timestamps, generated ids etc);
@@ -158,7 +158,7 @@ Let's say we would like to create simple counter with the following payload sent
     }
 
 In this case we could use *data generatation* mode (see **Usage** section above). On the step #2 create schema with one integer property as shown on the screenshot below:
-![enter image description here](https://github.com/evgenys91/iot-data-simulator-docs/blob/master/counter-example.png?raw=true)
+![counter-example](https://user-images.githubusercontent.com/4072962/38543711-fe726e92-3cad-11e8-9e64-fe633a39735c.png)
 
 On step #5 select "Custom function" rule for the "count" property. Open editor and apply the following JS function:
 

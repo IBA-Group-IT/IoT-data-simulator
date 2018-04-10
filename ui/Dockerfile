@@ -10,7 +10,6 @@ COPY public-src public-src
 
 WORKDIR /usr/app/public-src
 RUN npm install
-RUN npm install --only=dev
 RUN npm run build:prod
 
 # Final image build with node env and static bundle

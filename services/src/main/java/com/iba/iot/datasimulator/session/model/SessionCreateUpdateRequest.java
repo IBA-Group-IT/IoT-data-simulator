@@ -26,6 +26,9 @@ public class SessionCreateUpdateRequest {
     @Valid
     private Timer timer;
 
+    /** **/
+    private int ticksNumber;
+
     @Valid
     private DatasetFilter datasetFilter;
 

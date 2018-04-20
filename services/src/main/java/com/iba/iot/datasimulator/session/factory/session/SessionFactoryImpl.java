@@ -46,6 +46,7 @@ public class SessionFactoryImpl implements SessionFactory {
         session.setGenerator(sessionCreateUpdateRequest.getGenerator());
         session.setTimer(sessionCreateUpdateRequest.getTimer());
         session.setDatasetFilter(sessionCreateUpdateRequest.getDatasetFilter());
+        session.setTicksNumber(sessionCreateUpdateRequest.getTicksNumber());
 
         String definitionId = sessionCreateUpdateRequest.getDataDefinitionId();
         if (StringUtils.isNotBlank(definitionId)) {

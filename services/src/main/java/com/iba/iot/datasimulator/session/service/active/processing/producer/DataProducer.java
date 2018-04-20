@@ -33,6 +33,12 @@ public class DataProducer extends AbstractManageableObservableOnSubscribe<Active
     private String previousDatasetEntry;
 
     /** **/
+    private int ticksThreshold;
+
+    /** **/
+    private int ticksCounter;
+
+    /** **/
     private ObservableEmitter<ActiveSessionPayload> emitter;
 
     /**
@@ -40,16 +46,19 @@ public class DataProducer extends AbstractManageableObservableOnSubscribe<Active
      * @param datasetReader
      * @param timerProcessor
      */
-    public DataProducer(DatasetReader<String> datasetReader, TimerProcessor timerProcessor) {
+    public DataProducer(DatasetReader<String> datasetReader, TimerProcessor timerProcessor, int ticksNumber) {
 
         this.datasetReader = datasetReader;
         this.timerProcessor = timerProcessor;
+        this.ticksThreshold = ticksNumber;
     }
 
     @Override
     public void subscribe(ObservableEmitter<ActiveSessionPayload> emitter) throws Exception {
 
         this.emitter = emitter;
+        handleTicksRestriction();
+
         if (datasetReader != null) {
 
             logger.debug(">>> Processing dataset reading.");
@@ -59,6 +68,19 @@ public class DataProducer extends AbstractManageableObservableOnSubscribe<Active
 
             logger.debug(">>> Processing empty data generation.");
             processEmptyEntry();
+        }
+    }
+
+    /**
+     *
+     */
+    private void handleTicksRestriction() {
+
+        if (ticksThreshold > 0) {
+            ticksCounter++;
+            if (ticksCounter >= ticksThreshold) {
+                stop();
+            }
         }
     }
 

@@ -1,0 +1,2 @@
+# Disable line endings correction for linux sh files
+*.sh binary

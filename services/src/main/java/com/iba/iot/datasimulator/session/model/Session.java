@@ -62,6 +62,9 @@ public class Session implements ModelEntity {
     private Timer timer;
 
     @JsonView(SessionViews.Short.class)
+    private int ticksNumber;
+
+    @JsonView(SessionViews.Short.class)
     @Embedded
     @Valid
     private DatasetFilter datasetFilter;

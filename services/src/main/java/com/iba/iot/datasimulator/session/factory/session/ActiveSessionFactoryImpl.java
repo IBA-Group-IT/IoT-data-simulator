@@ -61,7 +61,7 @@ public class ActiveSessionFactoryImpl implements ActiveSessionFactory {
         DatasetReader<String> datasetReader = buildDatasetReader(session);
         TimerProcessor timerProcessor = buildTimerProcessor(session);
 
-        DataProducer dataProducer = beanFactory.getBean(DataProducer.class, datasetReader, timerProcessor);
+        DataProducer dataProducer = beanFactory.getBean(DataProducer.class, datasetReader, timerProcessor, session.getTicksNumber());
         DeviceInjectionProcessor deviceInjectorProcessor = buildDeviceInjectionProcessor(session);
         SessionPayloadGenerator sessionPayloadGenerator = sessionPayloadGeneratorFactory.build(session);
 

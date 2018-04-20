@@ -11,6 +11,8 @@ public enum ActiveSessionState {
 
     COMPLETED("completed"),
 
+    STOPPED("stopped"),
+
     FAILED("failed");
 
     /** **/

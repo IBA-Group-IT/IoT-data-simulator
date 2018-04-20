@@ -2,9 +2,12 @@ package com.iba.iot.datasimulator.session.service.active.watcher;
 
 import com.iba.iot.datasimulator.session.model.active.ActiveSessionState;
 import com.iba.iot.datasimulator.session.model.active.ActiveSessionStatus;
+import com.iba.iot.datasimulator.session.model.active.command.ActiveSessionManagementCommand;
+import com.iba.iot.datasimulator.session.model.active.command.SessionManagementCommand;
 import com.iba.iot.datasimulator.session.model.active.message.ActiveSessionErrorMessage;
 import com.iba.iot.datasimulator.session.model.active.message.ActiveSessionStatusMessage;
 import com.iba.iot.datasimulator.session.service.active.entity.ActiveSession;
+import com.iba.iot.datasimulator.session.service.active.manager.ActiveSessionManager;
 import com.iba.iot.datasimulator.session.util.ActiveSessionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +32,9 @@ public class ActiveSessionWatcherImpl implements ActiveSessionWatcher {
     @Qualifier("sessionStore")
     private Map<String, ActiveSession> sessionStore;
 
+    @Autowired
+    private ActiveSessionManager activeSessionManager;
+
     @RabbitListener(queues = "sessionStates")
     @Override
     public void processCompletedSessions(ActiveSessionStatusMessage message) {
@@ -37,12 +43,27 @@ public class ActiveSessionWatcherImpl implements ActiveSessionWatcher {
         if (status.getState() == ActiveSessionState.COMPLETED) {
 
             String sessionId = status.getSessionId();
-            if (ActiveSessionUtil.getSessionState(sessionStore.get(sessionId)) == ActiveSessionState.COMPLETED) {
+            ActiveSession session = sessionStore.get(sessionId);
+            if (ActiveSessionUtil.getSessionState(session) == ActiveSessionState.COMPLETED) {
 
                 logger.debug("Removing session {} from session store as competed.", sessionId);
                 sessionStore.remove(sessionId);
+
+                if (session.isReplayLooped() && !session.isStopped()) {
+                    restartSession(sessionId);
+                }
             }
         }
+    }
+
+    /**
+     *
+     * @param sessionId
+     */
+    private void restartSession(String sessionId) {
+
+        logger.debug(">>> Restarting session {} on completion due to looped session replay setting.");
+        activeSessionManager.manage(sessionId, new ActiveSessionManagementCommand(SessionManagementCommand.START));
     }
 
     @RabbitListener(queues = "sessionErrors")

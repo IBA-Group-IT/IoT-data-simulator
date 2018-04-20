@@ -61,6 +61,9 @@ public class ActiveSessionEntity implements ActiveSession {
     /** **/
     private Collection<String> errors = new ArrayList<>();
 
+    /** **/
+    private boolean isStopped;
+
     /**
      *
      * @param session
@@ -114,6 +117,7 @@ public class ActiveSessionEntity implements ActiveSession {
     public void stop() {
 
         logger.info(">>> Session {} has been stopped", sessionId);
+        isStopped = true;
         dataProducer.stop();
     }
 
@@ -221,5 +225,15 @@ public class ActiveSessionEntity implements ActiveSession {
      */
     private void sendSessionCompletedPayload() {
         payloadSender.send(sessionId, new ActiveSessionPayload(ActiveSessionState.COMPLETED), session.getTargetSystem());
+    }
+
+    @Override
+    public boolean isReplayLooped() {
+        return session.isReplayLooped();
+    }
+
+    @Override
+    public boolean isStopped() {
+        return isStopped;
     }
 }

@@ -141,4 +141,14 @@ public class DummyActiveSession implements ActiveSession {
 
         messagingTemplate.convertAndSend(StompUtil.getSessionAnalyticsTopic(sessionId), activeSessionAnalyticsMessage);
     }
+
+    @Override
+    public boolean isReplayLooped() {
+        return false;
+    }
+
+    @Override
+    public boolean isStopped() {
+        return false;
+    }
 }

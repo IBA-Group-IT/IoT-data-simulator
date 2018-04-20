@@ -1,5 +1,6 @@
 package com.iba.iot.datasimulator.session.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.iba.iot.datasimulator.session.model.active.filter.DatasetFilter;
 import com.iba.iot.datasimulator.session.model.active.generator.Generator;
 import com.iba.iot.datasimulator.session.model.active.injector.DeviceInjector;
@@ -29,7 +30,7 @@ public class SessionCreateUpdateRequest {
     /** **/
     private int ticksNumber;
 
-    /** **/
+    @JsonProperty(value="isReplayLooped")
     private boolean isReplayLooped;
 
     @Valid

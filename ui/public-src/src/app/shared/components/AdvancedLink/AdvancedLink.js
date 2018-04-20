@@ -8,7 +8,9 @@ const StyledAdvancedLink = glamorous.div({
     textDecoration: "underline",
     cursor: "pointer",
     display: 'flex',
-    alignItems: 'center'
+    alignItems: 'center',
+    fontSize: '15px',
+    fontWeight: 'bold'
 });
 
 const AdvancedLinkIcon = glamorous(ArrowDownIcon, {

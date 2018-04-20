@@ -117,6 +117,7 @@ export default class DatasetFilterStore {
         let fieldsConfig = {
             type: {
                 type: "select",
+                label: 'dataset filter',
                 initial: datasetFilter.type,
                 options: filterTypeOptions,
                 onUpdate: field => {

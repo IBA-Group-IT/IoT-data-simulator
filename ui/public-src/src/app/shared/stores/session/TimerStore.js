@@ -39,6 +39,8 @@ export default class TimerStore {
     @observable form;
     @observable.ref session;
     @observable.ref paths = [];
+    @observable isAdvancedPanelOpen = false;
+    
 
     constructor(appStore) {
         this.dispose = autorun(() => {
@@ -46,6 +48,11 @@ export default class TimerStore {
                 this.form = this.buildForm(this.session);
             }
         });
+    }
+
+    @action.bound
+    toggleAdvancedPanel() { 
+        this.isAdvancedPanelOpen = !this.isAdvancedPanelOpen;
     }
 
     buildForm(session) {
@@ -258,6 +265,17 @@ export default class TimerStore {
                 },
                 extra: availableTypes,
                 value: initialValue
+            },
+            {
+                key: 'ticksNumber',
+                name: 'ticks number',
+                label: 'ticks number',
+                rules: 'integer|exclusive_min:0',
+                hooks: {
+                    onChange: field => {
+                        session.timer.setParameter('ticksNumber', field.value)
+                    }
+                }
             }
         ];
 

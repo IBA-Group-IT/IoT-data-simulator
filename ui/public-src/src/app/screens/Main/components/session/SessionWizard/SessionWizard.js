@@ -40,7 +40,7 @@ import Property from "../../definition/DefinitionWizard/SchemaStep/Constructor/P
 import FormstateField from "components/Form/Field";
 import FormstateSelectField from "components/Form/SelectField";
 import FormstateEditorField from "components/Form/Editor";
-import AdvancedLink from 'components/AdvancedLink';
+import AdvancedLink from "components/AdvancedLink";
 
 //////////////////////////////////////////////////////////////////////
 const SessionWizardLayout = glamorous.div({
@@ -254,6 +254,10 @@ export default class SessionWizard extends React.Component {
                                         {store.timerStore.form.map(field => {
                                             let type =
                                                 field.$type || field.type;
+
+                                            if (field.key === "ticksNumber")
+                                                return;
+
                                             if (type === "select") {
                                                 return (
                                                     <SelectField
@@ -290,26 +294,36 @@ export default class SessionWizard extends React.Component {
                                     </div>
                                 )}
 
+                                <br />
 
                                 <AdvancedLink
                                     onClick={() =>
-                                        datasetFilterStore.toggleAdvancedPanel()}
-                                    isExpanded={datasetFilterStore.isAdvancedPanelOpen}
+                                        store.timerStore.toggleAdvancedPanel()
+                                    }
+                                    isExpanded={
+                                        store.timerStore.isAdvancedPanelOpen
+                                    }
                                 >
                                     <span>Advanced options</span>
                                 </AdvancedLink>
 
-                                
-                                {datasetFilterStore.isAdvancedPanelOpen && (
+                                {store.timerStore.isAdvancedPanelOpen && (
                                     <div>
+                                        <br />
+                                        {
+                                            <TextField
+                                                field={store.timerStore.form.$(
+                                                    "ticksNumber"
+                                                )}
+                                            />
+                                        }
+
                                         {datasetFilterStore.shouldShowDatasetFilter && (
                                             <div>
-                                                <SubTitle>
-                                                    Dataset filter
-                                                </SubTitle>
                                                 {
                                                     <DatasetFilterContainer>
                                                         <FilterTypeSelect
+                                                            label="dataset filter"
                                                             field={
                                                                 datasetFilterStore
                                                                     .form.$.type

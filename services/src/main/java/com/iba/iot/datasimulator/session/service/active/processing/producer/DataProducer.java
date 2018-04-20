@@ -33,6 +33,12 @@ public class DataProducer extends AbstractManageableObservableOnSubscribe<Active
     private String previousDatasetEntry;
 
     /** **/
+    private int ticksThreshold;
+
+    /** **/
+    private int ticksCounter;
+
+    /** **/
     private ObservableEmitter<ActiveSessionPayload> emitter;
 
     /**
@@ -40,10 +46,11 @@ public class DataProducer extends AbstractManageableObservableOnSubscribe<Active
      * @param datasetReader
      * @param timerProcessor
      */
-    public DataProducer(DatasetReader<String> datasetReader, TimerProcessor timerProcessor) {
+    public DataProducer(DatasetReader<String> datasetReader, TimerProcessor timerProcessor, int ticksNumber) {
 
         this.datasetReader = datasetReader;
         this.timerProcessor = timerProcessor;
+        this.ticksThreshold = ticksNumber;
     }
 
     @Override
@@ -85,6 +92,7 @@ public class DataProducer extends AbstractManageableObservableOnSubscribe<Active
             emitter.onNext(activeSessionPayload);
 
             previousDatasetEntry = nextDatasetEntry;
+            handleTicksRestriction();
         }
 
         logger.debug(">>> Dataset reading has been completed.");
@@ -108,10 +116,27 @@ public class DataProducer extends AbstractManageableObservableOnSubscribe<Active
             if (!processWaiting(waitInterval)) break;
 
             processPause();
+            handleTicksRestriction();
         }
 
         logger.debug(">>> Event sending has been completed.");
         emitter.onComplete();
+    }
+
+    /**
+     *
+     */
+    private void handleTicksRestriction() {
+
+        if (ticksThreshold > 0) {
+
+            ticksCounter++;
+            if (ticksCounter >= ticksThreshold) {
+
+                logger.debug(">>> Stopping session due to ticks threshold exceeding.");
+                super.stop();
+            }
+        }
     }
 
     @Override

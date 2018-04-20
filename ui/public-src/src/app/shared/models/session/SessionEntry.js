@@ -20,11 +20,13 @@ export default class SessionEntry {
     @observable.ref deviceInjector;
     @observable devices = [];
     @observable paths = [];
+    @observable ticksNumber;
 
     constructor(
         {
             id,
             name,
+            ticksNumber,
             dataDefinition,
             timer = {},
             generator = { type: generatorTypes.jsFunction },
@@ -37,6 +39,7 @@ export default class SessionEntry {
     ) {
         this.id = id;
         this.name = name;
+        this.ticksNumber = ticksNumber;
 
         this.dataDefinition = new DefinitionEntry({
             ...dataDefinition
@@ -60,6 +63,11 @@ export default class SessionEntry {
     @action.bound
     setState(state) {
         this.state = state;
+    }
+
+    @action.bound
+    setTicksNumber(ticksNumber) { 
+        this.ticksNumber = ticksNumber;
     }
 
     @action.bound
@@ -190,10 +198,11 @@ export default class SessionEntry {
 
     @computed
     get data() {
-        let { id, name, timer, ...params } = this.toJSON();
+        let { id, name, ticksNumber, timer, ...params } = this.toJSON();
 
         let data = {
             name,
+            ticksNumber,
             timer
         };
 
@@ -225,8 +234,12 @@ export default class SessionEntry {
     toJSON() {
         let params = toJS({
             id: this.id,
-            name: this.name
+            name: this.name,
         });
+
+        if(this.ticksNumber) {
+            params.ticksNumber = parseInt(this.ticksNumber, 10);
+        }
 
         if (this.dataDefinition && this.dataDefinition.id) {
             params.dataDefinition = this.dataDefinition.toJSON();

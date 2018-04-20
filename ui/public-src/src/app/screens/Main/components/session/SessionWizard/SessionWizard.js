@@ -40,6 +40,7 @@ import Property from "../../definition/DefinitionWizard/SchemaStep/Constructor/P
 import FormstateField from "components/Form/Field";
 import FormstateSelectField from "components/Form/SelectField";
 import FormstateEditorField from "components/Form/Editor";
+import AdvancedLink from "components/AdvancedLink";
 
 //////////////////////////////////////////////////////////////////////
 const SessionWizardLayout = glamorous.div({
@@ -227,11 +228,9 @@ export default class SessionWizard extends React.Component {
                                         }
                                         selectable={true}
                                         selectedIds={
-                                            session.hasDefinition ? (
-                                                [session.dataDefinition.id]
-                                            ) : (
-                                                []
-                                            )
+                                            session.hasDefinition
+                                                ? [session.dataDefinition.id]
+                                                : []
                                         }
                                         onSelect={store.setDefinition}
                                     />
@@ -255,6 +254,10 @@ export default class SessionWizard extends React.Component {
                                         {store.timerStore.form.map(field => {
                                             let type =
                                                 field.$type || field.type;
+
+                                            if (field.key === "ticksNumber")
+                                                return;
+
                                             if (type === "select") {
                                                 return (
                                                     <SelectField
@@ -291,50 +294,79 @@ export default class SessionWizard extends React.Component {
                                     </div>
                                 )}
 
-                                {datasetFilterStore.shouldShowDatasetFilter && (
+                                <br />
+
+                                <AdvancedLink
+                                    onClick={() =>
+                                        store.timerStore.toggleAdvancedPanel()
+                                    }
+                                    isExpanded={
+                                        store.timerStore.isAdvancedPanelOpen
+                                    }
+                                >
+                                    <span>Advanced options</span>
+                                </AdvancedLink>
+
+                                {store.timerStore.isAdvancedPanelOpen && (
                                     <div>
-                                        <SubTitle>Dataset filter</SubTitle>
+                                        <br />
                                         {
-                                            <DatasetFilterContainer>
-                                                <FilterTypeSelect
-                                                    field={
-                                                        datasetFilterStore.form
-                                                            .$.type
-                                                    }
-                                                />
-                                                {datasetFilterStore.isCustomFunctionSelected && (
-                                                    <div>
-                                                        <FormstateEditorField
-                                                            field={
-                                                                datasetFilterStore
-                                                                    .form.$
-                                                                    .jsFunction
-                                                            }
-                                                        />
-                                                    </div>
+                                            <TextField
+                                                field={store.timerStore.form.$(
+                                                    "ticksNumber"
                                                 )}
-                                                {datasetFilterStore.isDatasetEntrySelected && (
-                                                    <div>
-                                                        <FilterTypeSelect
-                                                            field={
-                                                                datasetFilterStore
-                                                                    .form.$
-                                                                    .position
-                                                            }
-                                                            label="position"
-                                                        />
-                                                        <FormstateField
-                                                            field={
-                                                                datasetFilterStore
-                                                                    .form.$
-                                                                    .value
-                                                            }
-                                                            label="value"
-                                                        />
-                                                    </div>
-                                                )}
-                                            </DatasetFilterContainer>
+                                            />
                                         }
+
+                                        {datasetFilterStore.shouldShowDatasetFilter && (
+                                            <div>
+                                                {
+                                                    <DatasetFilterContainer>
+                                                        <FilterTypeSelect
+                                                            label="dataset filter"
+                                                            field={
+                                                                datasetFilterStore
+                                                                    .form.$.type
+                                                            }
+                                                        />
+                                                        {datasetFilterStore.isCustomFunctionSelected && (
+                                                            <div>
+                                                                <FormstateEditorField
+                                                                    field={
+                                                                        datasetFilterStore
+                                                                            .form
+                                                                            .$
+                                                                            .jsFunction
+                                                                    }
+                                                                />
+                                                            </div>
+                                                        )}
+                                                        {datasetFilterStore.isDatasetEntrySelected && (
+                                                            <div>
+                                                                <FilterTypeSelect
+                                                                    field={
+                                                                        datasetFilterStore
+                                                                            .form
+                                                                            .$
+                                                                            .position
+                                                                    }
+                                                                    label="position"
+                                                                />
+                                                                <FormstateField
+                                                                    field={
+                                                                        datasetFilterStore
+                                                                            .form
+                                                                            .$
+                                                                            .value
+                                                                    }
+                                                                    label="value"
+                                                                />
+                                                            </div>
+                                                        )}
+                                                    </DatasetFilterContainer>
+                                                }
+                                            </div>
+                                        )}
                                     </div>
                                 )}
                             </StepInnerContainer>

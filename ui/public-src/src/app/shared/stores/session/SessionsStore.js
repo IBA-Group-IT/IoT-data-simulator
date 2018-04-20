@@ -1,75 +1,9 @@
 import { observable, computed, action, runInAction, transaction } from "mobx";
+import { chunkProcessor } from 'mobx-utils';
 import SessionEntry from "models/session/SessionEntry";
 
 import LogEntry from "models/session/LogEntry";
 let LogTypes = LogEntry.types;
-
-class Buffer {
-    DELAY = 200; //ms
-    buffer = [];
-    lastTms = null;
-
-    //@observable.shallow items = [];
-
-    constructor(size) {
-        this.size = size;
-        this.items = observable.shallowArray([]);
-    }
-
-    @action.bound
-    push(item) {
-        let now = Date.now();
-
-        if (this.lastTms && now - this.lastTms < this.DELAY) {
-            if (!this.timer) {
-                this.timer = setTimeout(() => {
-                    //runInAction(() => {
-
-                    // this.buffer.forEach(datum => {
-                    //     if (this.items.length >= this.size) {
-                    //         this.items.shift();
-                    //     }
-                    //     this.items.push(datum);
-                    // });
-
-                    if (this.buffer.length >= this.size) {
-                        this.items.replace(
-                            this.buffer.slice(this.buffer.length - this.size)
-                        );
-                    } else {
-                        let itemsCount = this.size - this.buffer.length;
-                        this.items.replace(
-                            this.items
-                                .slice(0, itemsCount - 1)
-                                .concat(this.buffer)
-                        );
-                    }
-
-                    this.lastTms = Date.now();
-                    this.buffer = [];
-
-                    clearTimeout(this.timer);
-                    this.timer = null;
-                    //});
-                }, this.DELAY);
-            }
-            this.buffer.push(item);
-        } else {
-            if (!this.timer) {
-                this.items.push(item);
-                this.lastTms = Date.now();
-            } else {
-                this.buffer.push(item);
-            }
-        }
-    }
-    getAll() {
-        return this.items;
-    }
-    clear() {
-        this.items.replace([]);
-    }
-}
 
 export default class SessionsStore {
     appStore;
@@ -80,8 +14,13 @@ export default class SessionsStore {
         notActive: "notActive"
     };
 
+    bufferSize = 100;
+
     @observable.shallow items = [];
-    logs = new Buffer(100);
+    
+    @observable.shallow logs = [];
+    @observable.shallow logsBuffer = [];
+
     @observable nameFilter = "";
     @observable stateFilter = this.filterTypes.all;
 
@@ -135,6 +74,16 @@ export default class SessionsStore {
         this.subscriptionManager.subscribeToAllSessions(
             this.handleSubscription
         );
+
+        let bufferSize = this.bufferSize;
+        const stop = chunkProcessor(this.logsBuffer, chunk => {
+            let itemsCount = this.logs.length + chunk.length;
+            let offset = itemsCount > bufferSize ? itemsCount - bufferSize : 0;
+            this.logs.replace(
+                this.logs.slice(offset).concat(chunk)
+            )
+            this.logsBuffer.clear();
+        }, 200, bufferSize)
     }
 
     handleSubscription = data => {
@@ -147,7 +96,7 @@ export default class SessionsStore {
             let { message, sessionId, timestamp } = data;
             let sessionName = this._itemsMap.get(sessionId).name;
 
-            this.logs.push({
+            this.logsBuffer.push({
                 message,
                 sessionId,
                 sessionName,
@@ -158,7 +107,7 @@ export default class SessionsStore {
             let { message, sessionId, timestamp, tag } = data;
             let sessionName = this._itemsMap.get(sessionId).name;
 
-            this.logs.push({
+            this.logsBuffer.push({
                 message,
                 sessionId,
                 sessionName,

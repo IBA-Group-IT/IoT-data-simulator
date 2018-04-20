@@ -52,7 +52,7 @@ export default class SessionsScreenStore {
     }
 
     @computed get logs() {
-        let logs = this.appStore.sessionsStore.logs.getAll();
+        let logs = this.appStore.sessionsStore.logs;
         
         if(this.sessionsFilter && this.sessionsFilter.length) {
             logs = logs.filter((log) => {
@@ -70,6 +70,7 @@ export default class SessionsScreenStore {
     }
 
     @computed get logsFilterApplied() { 
+        //TODO Magic number detected!
         if((this.sessionsFilter && this.sessionsFilter.length) || (this.typeFilter.length !== 0 && this.typeFilter.length !== 3)) { 
             return true;
         }

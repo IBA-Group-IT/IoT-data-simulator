@@ -41,48 +41,47 @@ const StyledConsole = glamorous.div({
     flex: "1 1 0%"
 });
 
-const StyledTimestamp = glamorous.span({
+const logTimestampStyles = {
     color: "#53f300",
     marginRight: "20px"
-});
+};
 
-const StyledId = glamorous.span({
+const logIdStyles = {
     color: "#dee335",
     marginRight: "20px"
-});
+};
 
-const Message = glamorous.span("logMessage", props => {
+const getLogMessageStyle = log => {
     let common = {
         wordBreak: "break-all"
     };
-    switch (props.type) {
-        case "payload": {
-            return {
-                ...common,
-                color: "white"
-            };
-        }
-        case "analytics": {
-            return {
-                ...common,
-                color: "#3155ff"
-            };
-        }
-        case "error": {
-            return {
-                ...common,
-                color: "#ff3838"
-            };
-        }
-    }
-});
 
-const Logs = glamorous.div({
+    let getMessageColor = log => {
+        switch (log.type) {
+            case LogTypes.analytics: {
+                return "#3155ff";
+            }
+            case LogTypes.error: {
+                return "#ff3838";
+            }
+            default:
+                return 'white'
+        }
+    };
+
+    return {
+        ...common,
+        color: getMessageColor(log)
+    }
+};
+
+const logsContainerStyles = {
     maxHeight: "100%",
     height: "auto",
     overflow: "auto",
     padding: "3px 10px"
-});
+}
+
 
 const ControlPanel = glamorous.div({
     padding: "3px 10px",
@@ -103,7 +102,7 @@ const Controls = glamorous.div({
 });
 
 const ControlButton = glamorous(IconButton, {
-    filterProps: ['active'],
+    filterProps: ["active"],
     withProps: ({ active }) => ({
         style: {
             color: active ? "#405ce3" : "white",
@@ -211,12 +210,14 @@ const logTypeToMessageMap = {
     [LogTypes.error]: "error"
 };
 
-@inject("store")
-@observer
-export default class Console extends Component {
-    
-    generateId() {
-        return Math.round(Math.random() * 1000);
+class LogsList extends Component {
+    componentDidUpdate() {
+        this.scrollBottom();
+    }
+
+    scrollBottom() {
+        let node = ReactDOM.findDOMNode(this.refs.logsEnd);
+        node.scrollIntoView({ behavior: "smooth" });
     }
 
     formatNum(number) {
@@ -237,27 +238,53 @@ export default class Console extends Component {
         return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
     }
 
-    componentDidUpdate() {
-        this.scrollBottom();
-    }
-
-    scrollBottom() {
-        let node = ReactDOM.findDOMNode(this.refs.logsEnd);
-        node.scrollIntoView({ behavior: "smooth" });
-    }
-
-    renderLogMessage(log) {
-        if (log.type === LogTypes.payload) {
-            return <Message type="payload">Payload: {log.message}</Message>;
-        } else if (log.type === LogTypes.analytics) {
-            return (
-                <Message type="analytics">
-                    {tagToMessageMap[log.tag](log)}
-                </Message>
-            );
-        } else if (log.type === LogTypes.error) {
-            return <Message type="error">{log.message}</Message>;
+    getLogMessage(log) { 
+        if (log.type === LogTypes.analytics) {
+            return tagToMessageMap[log.tag](log);
         }
+        return log.message;
+    }
+
+    getKey(log) {
+        return `${log.sessionId}_${log.timestamp}_${JSON.stringify(
+            log.message
+        )}`;
+    }
+
+    render() {
+        return (
+            <div style={logsContainerStyles}>
+                {this.props.logs.map((log, idx) => {
+                    let key = idx;
+                    return (
+                        <div key={key}>
+                            <div>
+                                <span style={logTimestampStyles}>{this.formatTimestamp(log.timestamp)}</span>
+                                <span style={logIdStyles}>{log.sessionName}</span>
+                                <span style={getLogMessageStyle(log)}>{this.getLogMessage(log)}</span>
+                            </div>
+                        </div>
+                    );
+                })}
+                <div ref="logsEnd" />
+            </div>
+        );
+    }
+}
+
+@inject("store")
+@observer
+class LogsListContainer extends Component {
+    render() {
+        return <LogsList logs={this.props.store.sessionsScreenStore.logs} />;
+    }
+}
+
+@inject("store")
+@observer
+export default class Console extends Component {
+    generateId() {
+        return Math.round(Math.random() * 1000);
     }
 
     setSessionsFilter = e => {
@@ -322,8 +349,6 @@ export default class Console extends Component {
             logsFilterApplied
         } = sessionsScreenStore;
 
-        let { logs } = sessionsScreenStore;
-
         return (
             <StyledConsole>
                 <ControlPanel>
@@ -334,7 +359,8 @@ export default class Console extends Component {
                             onClick={() =>
                                 sessionsScreenStore.setFilterOptionsExpand(
                                     !isFilterOptionsExpanded
-                                )}
+                                )
+                            }
                         >
                             <FilterIcon />
                         </ControlButton>
@@ -359,7 +385,8 @@ export default class Console extends Component {
                                 onChange={this.setSessionsFilter}
                                 input={<Input id="sessions-filter-select" />}
                                 renderValue={value =>
-                                    this.getSessionsFilterTextByIds(value)}
+                                    this.getSessionsFilterTextByIds(value)
+                                }
                             >
                                 {sessionsStore.items.map(session => {
                                     return (
@@ -396,7 +423,8 @@ export default class Console extends Component {
                                                 onChange={() =>
                                                     this.toggleTypeFilter(
                                                         LogTypes.analytics
-                                                    )}
+                                                    )
+                                                }
                                                 value={LogTypes.analytics}
                                             />
                                         }
@@ -414,7 +442,8 @@ export default class Console extends Component {
                                                 onChange={() =>
                                                     this.toggleTypeFilter(
                                                         LogTypes.payload
-                                                    )}
+                                                    )
+                                                }
                                                 value={LogTypes.payload}
                                             />
                                         }
@@ -432,7 +461,8 @@ export default class Console extends Component {
                                                 onChange={() =>
                                                     this.toggleTypeFilter(
                                                         LogTypes.error
-                                                    )}
+                                                    )
+                                                }
                                                 value={LogTypes.error}
                                             />
                                         }
@@ -445,26 +475,7 @@ export default class Console extends Component {
                     </FilterControlPanel>
                 )}
 
-                <Logs>
-                    {logs.map((log, idx) => {
-                        //let key = `${log.sessionId}_${log.timestamp}_${this.generateId()}`;
-                        let key = idx;
-                        return (
-                            <div key={key}>
-                                <div>
-                                    <StyledTimestamp>
-                                        {this.formatTimestamp(log.timestamp)}
-                                    </StyledTimestamp>
-
-                                    <StyledId>{log.sessionName}</StyledId>
-
-                                    {this.renderLogMessage(log)}
-                                </div>
-                            </div>
-                        );
-                    })}
-                    <div ref="logsEnd" />
-                </Logs>
+                <LogsListContainer />
             </StyledConsole>
         );
     }

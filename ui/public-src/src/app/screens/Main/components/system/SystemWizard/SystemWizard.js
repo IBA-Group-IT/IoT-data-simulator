@@ -1,8 +1,6 @@
 import React, { Component } from "react";
 import { inject, observer } from "mobx-react";
 import glamorous from "glamorous";
-import ArrowDownIcon from 'material-ui-icons/ArrowDropDown';
-import ArrowUpIcon from 'material-ui-icons/ArrowDropUp';
 
 import Dialog, {
     DialogActions,
@@ -22,6 +20,7 @@ import Button from "material-ui/Button";
 import IconButton from "material-ui/IconButton";
 
 import DeleteIcon from "components/Icons/DeleteIcon";
+import AdvancedLink from 'components/AdvancedLink'
 
 const CreateEditSystemPanelLayout = glamorous.div({
     width: "100%",
@@ -101,27 +100,11 @@ const EditorButton = glamorous(Button, {
 
 const SubmitButton = glamorous(Button)({});
 
-const AdvancedLink = glamorous.div({
-    color: "#0066b3",
-    textDecoration: "underline",
-    cursor: "pointer",
-    display: 'flex',
-    alignItems: 'center'
-});
-
 const ProtoTypeField = glamorous(TextField, {
     withProps: {
         style: { minWidth: "375px" }
     }
 })({});
-
-const AdvancedLinkIcon = glamorous(ArrowDownIcon, {
-    filterProps: ['isExpanded']
-})(({ isExpanded }) => {
-    return {
-        transform: isExpanded ? 'rotate(0)' : 'rotate(270deg)'
-    }
-})
 
 @observer
 export default class SystemWizard extends Component {
@@ -299,60 +282,64 @@ export default class SystemWizard extends Component {
                                 )}
 
                                 {$securityForm.has("ca") &&
-                                $securityForm.has("caFile") && (
-                                    <div>
-                                        <InlineInput>
-                                            <TextField
-                                                field={$securityForm.$("ca")}
-                                            />
-                                        </InlineInput>
-                                        <InlineInput>
-                                            <MaterialFile
-                                                field={$securityForm.$(
-                                                    "caFile"
-                                                )}
-                                            />
-                                        </InlineInput>
-                                    </div>
-                                )}
+                                    $securityForm.has("caFile") && (
+                                        <div>
+                                            <InlineInput>
+                                                <TextField
+                                                    field={$securityForm.$(
+                                                        "ca"
+                                                    )}
+                                                />
+                                            </InlineInput>
+                                            <InlineInput>
+                                                <MaterialFile
+                                                    field={$securityForm.$(
+                                                        "caFile"
+                                                    )}
+                                                />
+                                            </InlineInput>
+                                        </div>
+                                    )}
                                 {$securityForm.has("deviceCertificate") &&
-                                $securityForm.has("deviceCertificateFile") && (
-                                    <div>
-                                        <InlineInput>
-                                            <TextField
-                                                field={$securityForm.$(
-                                                    "deviceCertificate"
-                                                )}
-                                            />
-                                        </InlineInput>
-                                        <InlineInput>
-                                            <MaterialFile
-                                                field={$securityForm.$(
-                                                    "deviceCertificateFile"
-                                                )}
-                                            />
-                                        </InlineInput>
-                                    </div>
-                                )}
+                                    $securityForm.has(
+                                        "deviceCertificateFile"
+                                    ) && (
+                                        <div>
+                                            <InlineInput>
+                                                <TextField
+                                                    field={$securityForm.$(
+                                                        "deviceCertificate"
+                                                    )}
+                                                />
+                                            </InlineInput>
+                                            <InlineInput>
+                                                <MaterialFile
+                                                    field={$securityForm.$(
+                                                        "deviceCertificateFile"
+                                                    )}
+                                                />
+                                            </InlineInput>
+                                        </div>
+                                    )}
                                 {$securityForm.has("privateKey") &&
-                                $securityForm.has("privateKeyFile") && (
-                                    <div>
-                                        <InlineInput>
-                                            <TextField
-                                                field={$securityForm.$(
-                                                    "privateKey"
-                                                )}
-                                            />
-                                        </InlineInput>
-                                        <InlineInput>
-                                            <MaterialFile
-                                                field={$securityForm.$(
-                                                    "privateKeyFile"
-                                                )}
-                                            />
-                                        </InlineInput>
-                                    </div>
-                                )}
+                                    $securityForm.has("privateKeyFile") && (
+                                        <div>
+                                            <InlineInput>
+                                                <TextField
+                                                    field={$securityForm.$(
+                                                        "privateKey"
+                                                    )}
+                                                />
+                                            </InlineInput>
+                                            <InlineInput>
+                                                <MaterialFile
+                                                    field={$securityForm.$(
+                                                        "privateKeyFile"
+                                                    )}
+                                                />
+                                            </InlineInput>
+                                        </div>
+                                    )}
                                 {$securityForm.has("accessKey") && (
                                     <TextField
                                         field={$securityForm.$("accessKey")}
@@ -413,280 +400,312 @@ export default class SystemWizard extends Component {
                     )}
 
                     {systemForm.has("messageSerializer") &&
-                    systemForm.$("messageSerializer").has("type") && (
-                        <Section>
-                            <SectionTitle>
-                                <AdvancedLink
-                                    onClick={() =>
-                                        store.formStore.toggleAdvancedOptions(
-                                            !store.formStore.isAdvancedOptionsOpen
+                        systemForm.$("messageSerializer").has("type") && (
+                            <Section>
+                                <SectionTitle>
+                                    <AdvancedLink
+                                        onClick={() =>
+                                            store.formStore.toggleAdvancedOptions(
+                                                !store.formStore
+                                                    .isAdvancedOptionsOpen
+                                            )
+                                        }
+                                        isExpanded={
+                                            store.formStore
+                                                .isAdvancedOptionsOpen
+                                        }
+                                    >
+                                        <span>Advanced options</span>
+                                    </AdvancedLink>
+                                </SectionTitle>
+
+                                {store.formStore.isAdvancedOptionsOpen && (
+                                    <SectionContent>
+                                        <p>Message serializer</p>
+
+                                        {
+                                            <SelectField
+                                                field={systemForm
+                                                    .$("messageSerializer")
+                                                    .$("type")}
+                                            />
+                                        }
+
+                                        {systemForm
+                                            .$("messageSerializer")
+                                            .has("protoDescriptor") && (
+                                            <div>
+                                                <InlineInput>
+                                                    <MaterialFile
+                                                        field={systemForm
+                                                            .$(
+                                                                "messageSerializer"
+                                                            )
+                                                            .$(
+                                                                "protoDescriptorFile"
+                                                            )}
+                                                    />
+                                                </InlineInput>
+                                                <InlineInput>
+                                                    <TextField
+                                                        field={systemForm
+                                                            .$(
+                                                                "messageSerializer"
+                                                            )
+                                                            .$(
+                                                                "protoDescriptor"
+                                                            )}
+                                                    />
+                                                </InlineInput>
+                                            </div>
                                         )}
-                                >
-                                    <AdvancedLinkIcon isExpanded={store.formStore.isAdvancedOptionsOpen} />
-                                    <span>Advanced options</span>
-                                </AdvancedLink>
-                            </SectionTitle>
 
-                            {store.formStore.isAdvancedOptionsOpen && (
-                                <SectionContent>
-                                    <p>Message serializer</p>
+                                        {systemForm
+                                            .$("messageSerializer")
+                                            .has("protoType") && (
+                                            <div>
+                                                <InlineInput>
+                                                    <ProtoTypeField
+                                                        field={systemForm
+                                                            .$(
+                                                                "messageSerializer"
+                                                            )
+                                                            .$("protoType")}
+                                                    />
+                                                </InlineInput>
+                                            </div>
+                                        )}
 
-                                    {
-                                        <SelectField
-                                            field={systemForm
-                                                .$("messageSerializer")
-                                                .$("type")}
-                                        />
-                                    }
+                                        {systemForm
+                                            .$("messageSerializer")
+                                            .has("jsBuilder") && (
+                                            <div>
+                                                <InlineInput>
+                                                    <EditorButton
+                                                        onClick={
+                                                            store.formStore
+                                                                .openMessageSerializerEditor
+                                                        }
+                                                    >
+                                                        type builder
+                                                    </EditorButton>
 
-                                    {systemForm
-                                        .$("messageSerializer")
-                                        .has("protoDescriptor") && (
-                                        <div>
-                                            <InlineInput>
-                                                <MaterialFile
-                                                    field={systemForm
-                                                        .$("messageSerializer")
-                                                        .$(
-                                                            "protoDescriptorFile"
-                                                        )}
-                                                />
-                                            </InlineInput>
-                                            <InlineInput>
-                                                <TextField
-                                                    field={systemForm
-                                                        .$("messageSerializer")
-                                                        .$("protoDescriptor")}
-                                                />
-                                            </InlineInput>
-                                        </div>
-                                    )}
+                                                    <Dialog
+                                                        maxWidth="md"
+                                                        fullWidth={true}
+                                                        open={
+                                                            store.formStore
+                                                                .isMessageSerializerEditorOpen
+                                                        }
+                                                    >
+                                                        <DialogTitle>
+                                                            Edit type builder
+                                                            function
+                                                        </DialogTitle>
+                                                        <DialogContent>
+                                                            <AceEditor
+                                                                mode="javascript"
+                                                                theme="monokai"
+                                                                width="100%"
+                                                                value={
+                                                                    store
+                                                                        .formStore
+                                                                        .currentMessageSerializerEditorValue
+                                                                }
+                                                                name="editor"
+                                                                onChange={
+                                                                    store
+                                                                        .formStore
+                                                                        .onMessageSerializerEditorChange
+                                                                }
+                                                                editorProps={{
+                                                                    $blockScrolling: true
+                                                                }}
+                                                            />
+                                                        </DialogContent>
+                                                        <DialogActions>
+                                                            <Button
+                                                                color="accent"
+                                                                onClick={
+                                                                    store
+                                                                        .formStore
+                                                                        .onMessageSerializerEditorCancel
+                                                                }
+                                                            >
+                                                                Cancel
+                                                            </Button>
+                                                            <Button
+                                                                color="primary"
+                                                                onClick={
+                                                                    store
+                                                                        .formStore
+                                                                        .onMessageSerializerEditorApply
+                                                                }
+                                                            >
+                                                                Save
+                                                            </Button>
+                                                        </DialogActions>
+                                                    </Dialog>
+                                                </InlineInput>
+                                            </div>
+                                        )}
 
-                                    {systemForm
-                                        .$("messageSerializer")
-                                        .has("protoType") && (
-                                        <div>
-                                            <InlineInput>
-                                                <ProtoTypeField
-                                                    field={systemForm
-                                                        .$("messageSerializer")
-                                                        .$("protoType")}
-                                                />
-                                            </InlineInput>
-                                        </div>
-                                    )}
+                                        <br />
 
-                                    {systemForm
-                                        .$("messageSerializer")
-                                        .has("jsBuilder") && (
-                                        <div>
-                                            <InlineInput>
-                                                <EditorButton
-                                                    onClick={
-                                                        store.formStore
-                                                            .openMessageSerializerEditor
-                                                    }
-                                                >
-                                                    type builder
-                                                </EditorButton>
+                                        {systemForm.has("keySerializer") &&
+                                            systemForm
+                                                .$("keySerializer")
+                                                .has("type") && (
+                                                <div>
+                                                    <p>Key serializer</p>
 
-                                                <Dialog
-                                                    maxWidth="md"
-                                                    fullWidth={true}
-                                                    open={
-                                                        store.formStore
-                                                            .isMessageSerializerEditorOpen
-                                                    }
-                                                >
-                                                    <DialogTitle>
-                                                        Edit type builder
-                                                        function
-                                                    </DialogTitle>
-                                                    <DialogContent>
-                                                        <AceEditor
-                                                            mode="javascript"
-                                                            theme="monokai"
-                                                            width="100%"
-                                                            value={
-                                                                store.formStore
-                                                                    .currentMessageSerializerEditorValue
-                                                            }
-                                                            name="editor"
-                                                            onChange={
-                                                                store.formStore
-                                                                    .onMessageSerializerEditorChange
-                                                            }
-                                                            editorProps={{
-                                                                $blockScrolling: true
-                                                            }}
+                                                    {
+                                                        <SelectField
+                                                            field={systemForm
+                                                                .$(
+                                                                    "keySerializer"
+                                                                )
+                                                                .$("type")}
                                                         />
-                                                    </DialogContent>
-                                                    <DialogActions>
-                                                        <Button
-                                                            color="accent"
-                                                            onClick={
-                                                                store.formStore
-                                                                    .onMessageSerializerEditorCancel
-                                                            }
-                                                        >
-                                                            Cancel
-                                                        </Button>
-                                                        <Button
-                                                            color="primary"
-                                                            onClick={
-                                                                store.formStore
-                                                                    .onMessageSerializerEditorApply
-                                                            }
-                                                        >
-                                                            Save
-                                                        </Button>
-                                                    </DialogActions>
-                                                </Dialog>
-                                            </InlineInput>
-                                        </div>
-                                    )}
+                                                    }
 
-                                    <br />
-
-                                    {systemForm.has("keySerializer") &&
-                                    systemForm
-                                        .$("keySerializer")
-                                        .has("type") && (
-                                        <div>
-                                            <p>Key serializer</p>
-
-                                            {
-                                                <SelectField
-                                                    field={systemForm
+                                                    {systemForm
                                                         .$("keySerializer")
-                                                        .$("type")}
-                                                />
-                                            }
-
-                                            {systemForm
-                                                .$("keySerializer")
-                                                .has("protoDescriptor") && (
-                                                <div>
-                                                    <InlineInput>
-                                                        <MaterialFile
-                                                            field={systemForm
-                                                                .$(
-                                                                    "keySerializer"
-                                                                )
-                                                                .$(
-                                                                    "protoDescriptorFile"
-                                                                )}
-                                                        />
-                                                    </InlineInput>
-                                                    <InlineInput>
-                                                        <TextField
-                                                            field={systemForm
-                                                                .$(
-                                                                    "keySerializer"
-                                                                )
-                                                                .$(
-                                                                    "protoDescriptor"
-                                                                )}
-                                                        />
-                                                    </InlineInput>
-                                                </div>
-                                            )}
-
-                                            {systemForm
-                                                .$("keySerializer")
-                                                .has("protoType") && (
-                                                <div>
-                                                    <InlineInput>
-                                                        <ProtoTypeField
-                                                            field={systemForm
-                                                                .$(
-                                                                    "keySerializer"
-                                                                )
-                                                                .$("protoType")}
-                                                        />
-                                                    </InlineInput>
-                                                </div>
-                                            )}
-
-                                            {systemForm
-                                                .$("keySerializer")
-                                                .has("jsBuilder") && (
-                                                <div>
-                                                    <InlineInput>
-                                                        <EditorButton
-                                                            onClick={
-                                                                store.formStore
-                                                                    .openKeySerializerEditor
-                                                            }
-                                                        >
-                                                            type builder
-                                                        </EditorButton>
-
-                                                        <Dialog
-                                                            maxWidth="md"
-                                                            fullWidth={true}
-                                                            open={
-                                                                store.formStore
-                                                                    .isKeySerializerEditorOpen
-                                                            }
-                                                        >
-                                                            <DialogTitle>
-                                                                Edit type
-                                                                builder function
-                                                            </DialogTitle>
-                                                            <DialogContent>
-                                                                <AceEditor
-                                                                    mode="javascript"
-                                                                    theme="monokai"
-                                                                    width="100%"
-                                                                    value={
-                                                                        store
-                                                                            .formStore
-                                                                            .currentKeySerializerEditorValue
-                                                                    }
-                                                                    name="editor"
-                                                                    onChange={
-                                                                        store
-                                                                            .formStore
-                                                                            .onKeySerializerEditorChange
-                                                                    }
-                                                                    editorProps={{
-                                                                        $blockScrolling: true
-                                                                    }}
+                                                        .has(
+                                                            "protoDescriptor"
+                                                        ) && (
+                                                        <div>
+                                                            <InlineInput>
+                                                                <MaterialFile
+                                                                    field={systemForm
+                                                                        .$(
+                                                                            "keySerializer"
+                                                                        )
+                                                                        .$(
+                                                                            "protoDescriptorFile"
+                                                                        )}
                                                                 />
-                                                            </DialogContent>
-                                                            <DialogActions>
-                                                                <Button
-                                                                    color="accent"
+                                                            </InlineInput>
+                                                            <InlineInput>
+                                                                <TextField
+                                                                    field={systemForm
+                                                                        .$(
+                                                                            "keySerializer"
+                                                                        )
+                                                                        .$(
+                                                                            "protoDescriptor"
+                                                                        )}
+                                                                />
+                                                            </InlineInput>
+                                                        </div>
+                                                    )}
+
+                                                    {systemForm
+                                                        .$("keySerializer")
+                                                        .has("protoType") && (
+                                                        <div>
+                                                            <InlineInput>
+                                                                <ProtoTypeField
+                                                                    field={systemForm
+                                                                        .$(
+                                                                            "keySerializer"
+                                                                        )
+                                                                        .$(
+                                                                            "protoType"
+                                                                        )}
+                                                                />
+                                                            </InlineInput>
+                                                        </div>
+                                                    )}
+
+                                                    {systemForm
+                                                        .$("keySerializer")
+                                                        .has("jsBuilder") && (
+                                                        <div>
+                                                            <InlineInput>
+                                                                <EditorButton
                                                                     onClick={
                                                                         store
                                                                             .formStore
-                                                                            .onKeySerializerEditorCancel
+                                                                            .openKeySerializerEditor
                                                                     }
                                                                 >
-                                                                    Cancel
-                                                                </Button>
-                                                                <Button
-                                                                    color="primary"
-                                                                    onClick={
+                                                                    type builder
+                                                                </EditorButton>
+
+                                                                <Dialog
+                                                                    maxWidth="md"
+                                                                    fullWidth={
+                                                                        true
+                                                                    }
+                                                                    open={
                                                                         store
                                                                             .formStore
-                                                                            .onKeySerializerEditorApply
+                                                                            .isKeySerializerEditorOpen
                                                                     }
                                                                 >
-                                                                    Save
-                                                                </Button>
-                                                            </DialogActions>
-                                                        </Dialog>
-                                                    </InlineInput>
+                                                                    <DialogTitle
+                                                                    >
+                                                                        Edit
+                                                                        type
+                                                                        builder
+                                                                        function
+                                                                    </DialogTitle>
+                                                                    <DialogContent
+                                                                    >
+                                                                        <AceEditor
+                                                                            mode="javascript"
+                                                                            theme="monokai"
+                                                                            width="100%"
+                                                                            value={
+                                                                                store
+                                                                                    .formStore
+                                                                                    .currentKeySerializerEditorValue
+                                                                            }
+                                                                            name="editor"
+                                                                            onChange={
+                                                                                store
+                                                                                    .formStore
+                                                                                    .onKeySerializerEditorChange
+                                                                            }
+                                                                            editorProps={{
+                                                                                $blockScrolling: true
+                                                                            }}
+                                                                        />
+                                                                    </DialogContent>
+                                                                    <DialogActions
+                                                                    >
+                                                                        <Button
+                                                                            color="accent"
+                                                                            onClick={
+                                                                                store
+                                                                                    .formStore
+                                                                                    .onKeySerializerEditorCancel
+                                                                            }
+                                                                        >
+                                                                            Cancel
+                                                                        </Button>
+                                                                        <Button
+                                                                            color="primary"
+                                                                            onClick={
+                                                                                store
+                                                                                    .formStore
+                                                                                    .onKeySerializerEditorApply
+                                                                            }
+                                                                        >
+                                                                            Save
+                                                                        </Button>
+                                                                    </DialogActions>
+                                                                </Dialog>
+                                                            </InlineInput>
+                                                        </div>
+                                                    )}
                                                 </div>
                                             )}
-                                        </div>
-                                    )}
-                                </SectionContent>
-                            )}
-                        </Section>
-                    )}
+                                    </SectionContent>
+                                )}
+                            </Section>
+                        )}
                 </PanelInnerContainer>
             </CreateEditSystemPanelLayout>
         );

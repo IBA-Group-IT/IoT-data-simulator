@@ -273,9 +273,10 @@ export default class TimerStore {
                 rules: 'integer|exclusive_min:0',
                 hooks: {
                     onChange: field => {
-                        session.timer.setParameter('ticksNumber', field.value)
+                        session.setTicksNumber(field.value)
                     }
-                }
+                },
+                value: untracked(() => session.ticksNumber || '')
             }
         ];
 

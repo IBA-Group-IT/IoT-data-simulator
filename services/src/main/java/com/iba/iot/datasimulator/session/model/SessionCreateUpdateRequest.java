@@ -29,6 +29,9 @@ public class SessionCreateUpdateRequest {
     /** **/
     private int ticksNumber;
 
+    /** **/
+    private boolean isReplayLooped;
+
     @Valid
     private DatasetFilter datasetFilter;
 

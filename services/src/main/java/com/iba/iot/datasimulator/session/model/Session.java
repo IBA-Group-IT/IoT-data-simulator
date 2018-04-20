@@ -65,6 +65,9 @@ public class Session implements ModelEntity {
     private int ticksNumber;
 
     @JsonView(SessionViews.Short.class)
+    private boolean isReplayLooped;
+
+    @JsonView(SessionViews.Short.class)
     @Embedded
     @Valid
     private DatasetFilter datasetFilter;

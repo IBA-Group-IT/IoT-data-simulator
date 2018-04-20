@@ -57,8 +57,6 @@ public class DataProducer extends AbstractManageableObservableOnSubscribe<Active
     public void subscribe(ObservableEmitter<ActiveSessionPayload> emitter) throws Exception {
 
         this.emitter = emitter;
-        handleTicksRestriction();
-
         if (datasetReader != null) {
 
             logger.debug(">>> Processing dataset reading.");
@@ -68,22 +66,6 @@ public class DataProducer extends AbstractManageableObservableOnSubscribe<Active
 
             logger.debug(">>> Processing empty data generation.");
             processEmptyEntry();
-        }
-    }
-
-    /**
-     *
-     */
-    private void handleTicksRestriction() {
-
-        if (ticksThreshold > 0) {
-
-            ticksCounter++;
-            if (ticksCounter >= ticksThreshold) {
-
-                logger.debug(">>> Stopping session due to ticks threshold exceeding.");
-                stop();
-            }
         }
     }
 
@@ -110,6 +92,7 @@ public class DataProducer extends AbstractManageableObservableOnSubscribe<Active
             emitter.onNext(activeSessionPayload);
 
             previousDatasetEntry = nextDatasetEntry;
+            handleTicksRestriction();
         }
 
         logger.debug(">>> Dataset reading has been completed.");
@@ -133,10 +116,27 @@ public class DataProducer extends AbstractManageableObservableOnSubscribe<Active
             if (!processWaiting(waitInterval)) break;
 
             processPause();
+            handleTicksRestriction();
         }
 
         logger.debug(">>> Event sending has been completed.");
         emitter.onComplete();
+    }
+
+    /**
+     *
+     */
+    private void handleTicksRestriction() {
+
+        if (ticksThreshold > 0) {
+
+            ticksCounter++;
+            if (ticksCounter >= ticksThreshold) {
+
+                logger.debug(">>> Stopping session due to ticks threshold exceeding.");
+                super.stop();
+            }
+        }
     }
 
     @Override

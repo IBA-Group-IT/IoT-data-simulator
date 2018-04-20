@@ -37,7 +37,7 @@ public class IntervalTimerProcessor implements TimerProcessor {
     public long getWaitInterval(String previousEntry, String nextEntry) {
 
         if (StringUtils.isEmpty(previousEntry) && StringUtils.isNotEmpty(nextEntry)) {
-            return 0;
+            return 500;
         }
 
         Long value = this.timer.getValue();

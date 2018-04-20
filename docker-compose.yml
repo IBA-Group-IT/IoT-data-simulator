@@ -39,7 +39,7 @@ services:
       - 61613:61613
   services:
     build: ./services
-    image: ibagroup/iot-data-simulator-services:1.0.1
+    image: ibagroup/iot-data-simulator-services:1.1.0
     container_name: iot-ds-services
     depends_on:
       - mongodb
@@ -64,7 +64,7 @@ services:
       - 8083:8083
   ui:
     build: ./ui
-    image: ibagroup/iot-data-simulator-ui:1.0.1
+    image: ibagroup/iot-data-simulator-ui:1.1.0
     container_name: iot-ds-ui
     depends_on:
       - services
@@ -79,7 +79,7 @@ services:
     command: ["npm", "start"]
   data-sender:
     build: ./data-sender
-    image: ibagroup/iot-data-simulator-sender:1.0.1
+    image: ibagroup/iot-data-simulator-sender:1.1.0
     container_name: iot-ds-data-sender
     depends_on:
       - rabbitmq

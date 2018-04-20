@@ -32,6 +32,7 @@ import SystemsList from "../../system/SystemsListContainer";
 
 import MaterialTextField from "components/Form/inputs/MaterialTextField";
 import MaterialSelect from "components/Form/inputs/MaterialSelect";
+import MaterialCheckbox from 'components/Form/inputs/MaterialCheckbox';
 import EditorField from "components/Form/Editor";
 
 import SchemaNode from "../../definition/DefinitionWizard/SchemaStep/SchemaConstructor/SchemaNode";
@@ -255,7 +256,7 @@ export default class SessionWizard extends React.Component {
                                             let type =
                                                 field.$type || field.type;
 
-                                            if (field.key === "ticksNumber")
+                                            if (field.key === "ticksNumber" || field.key === 'isReplayLooped')
                                                 return;
 
                                             if (type === "select") {
@@ -310,60 +311,66 @@ export default class SessionWizard extends React.Component {
                                 {store.timerStore.isAdvancedPanelOpen && (
                                     <div>
                                         <br />
-                                        {
-                                            <TextField
-                                                field={store.timerStore.form.$(
-                                                    "ticksNumber"
-                                                )}
-                                            />
-                                        }
+                                        <MaterialCheckbox
+                                            field={store.timerStore.form.$('isReplayLooped')}
+                                        />
+                                        <TextField
+                                            field={store.timerStore.form.$(
+                                                "ticksNumber"
+                                            )}
+                                        />
 
                                         {datasetFilterStore.shouldShowDatasetFilter && (
                                             <div>
                                                 {
-                                                    <DatasetFilterContainer>
-                                                        <FilterTypeSelect
-                                                            label="dataset filter"
-                                                            field={
-                                                                datasetFilterStore
-                                                                    .form.$.type
-                                                            }
-                                                        />
-                                                        {datasetFilterStore.isCustomFunctionSelected && (
-                                                            <div>
-                                                                <FormstateEditorField
-                                                                    field={
-                                                                        datasetFilterStore
-                                                                            .form
-                                                                            .$
-                                                                            .jsFunction
-                                                                    }
-                                                                />
-                                                            </div>
-                                                        )}
-                                                        {datasetFilterStore.isDatasetEntrySelected && (
-                                                            <div>
-                                                                <FilterTypeSelect
-                                                                    field={
-                                                                        datasetFilterStore
-                                                                            .form
-                                                                            .$
-                                                                            .position
-                                                                    }
-                                                                    label="position"
-                                                                />
-                                                                <FormstateField
-                                                                    field={
-                                                                        datasetFilterStore
-                                                                            .form
-                                                                            .$
-                                                                            .value
-                                                                    }
-                                                                    label="value"
-                                                                />
-                                                            </div>
-                                                        )}
-                                                    </DatasetFilterContainer>
+                                                    <div>
+                                                        <SubTitle>
+                                                            Dataset filter
+                                                        </SubTitle>
+                                                        <DatasetFilterContainer>
+                                                            <FilterTypeSelect
+                                                                field={
+                                                                    datasetFilterStore
+                                                                        .form.$
+                                                                        .type
+                                                                }
+                                                            />
+                                                            {datasetFilterStore.isCustomFunctionSelected && (
+                                                                <div>
+                                                                    <FormstateEditorField
+                                                                        field={
+                                                                            datasetFilterStore
+                                                                                .form
+                                                                                .$
+                                                                                .jsFunction
+                                                                        }
+                                                                    />
+                                                                </div>
+                                                            )}
+                                                            {datasetFilterStore.isDatasetEntrySelected && (
+                                                                <div>
+                                                                    <FilterTypeSelect
+                                                                        field={
+                                                                            datasetFilterStore
+                                                                                .form
+                                                                                .$
+                                                                                .position
+                                                                        }
+                                                                        label="position"
+                                                                    />
+                                                                    <FormstateField
+                                                                        field={
+                                                                            datasetFilterStore
+                                                                                .form
+                                                                                .$
+                                                                                .value
+                                                                        }
+                                                                        label="value"
+                                                                    />
+                                                                </div>
+                                                            )}
+                                                        </DatasetFilterContainer>
+                                                    </div>
                                                 }
                                             </div>
                                         )}

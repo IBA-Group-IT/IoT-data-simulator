@@ -21,12 +21,14 @@ export default class SessionEntry {
     @observable devices = [];
     @observable paths = [];
     @observable ticksNumber;
+    @observable isReplayLooped = false;
 
     constructor(
         {
             id,
             name,
             ticksNumber,
+            isReplayLooped = false,
             dataDefinition,
             timer = {},
             generator = { type: generatorTypes.jsFunction },
@@ -40,6 +42,7 @@ export default class SessionEntry {
         this.id = id;
         this.name = name;
         this.ticksNumber = ticksNumber;
+        this.isReplayLooped = isReplayLooped;
 
         this.dataDefinition = new DefinitionEntry({
             ...dataDefinition
@@ -68,6 +71,11 @@ export default class SessionEntry {
     @action.bound
     setTicksNumber(ticksNumber) { 
         this.ticksNumber = ticksNumber;
+    }
+
+    @action.bound
+    setIsReplayLooped(isLooped) { 
+        this.isReplayLooped = isLooped;
     }
 
     @action.bound
@@ -198,12 +206,13 @@ export default class SessionEntry {
 
     @computed
     get data() {
-        let { id, name, ticksNumber, timer, ...params } = this.toJSON();
+        let { id, name, isReplayLooped, ticksNumber, timer, ...params } = this.toJSON();
 
         let data = {
             name,
             ticksNumber,
-            timer
+            timer,
+            isReplayLooped
         };
 
         if (id) {
@@ -235,6 +244,7 @@ export default class SessionEntry {
         let params = toJS({
             id: this.id,
             name: this.name,
+            isReplayLooped: this.isReplayLooped
         });
 
         if(this.ticksNumber) {

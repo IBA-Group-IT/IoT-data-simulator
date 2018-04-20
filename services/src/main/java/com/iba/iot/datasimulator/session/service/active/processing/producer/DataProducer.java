@@ -77,8 +77,11 @@ public class DataProducer extends AbstractManageableObservableOnSubscribe<Active
     private void handleTicksRestriction() {
 
         if (ticksThreshold > 0) {
+
             ticksCounter++;
             if (ticksCounter >= ticksThreshold) {
+
+                logger.debug(">>> Stopping session due to ticks threshold exceeding.");
                 stop();
             }
         }

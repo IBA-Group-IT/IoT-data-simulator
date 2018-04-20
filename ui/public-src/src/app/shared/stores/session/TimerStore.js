@@ -277,6 +277,17 @@ export default class TimerStore {
                     }
                 },
                 value: untracked(() => session.ticksNumber || '')
+            },
+            {
+                key: 'isReplayLooped',
+                name: 'auto-replay',
+                label: 'Auto-replay',
+                hooks: {
+                    onChange: field => {
+                        session.setIsReplayLooped(field.value);
+                    }
+                },
+                value: untracked(() => session.isReplayLooped)
             }
         ];
 

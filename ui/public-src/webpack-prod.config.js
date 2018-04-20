@@ -2,6 +2,7 @@ var webpack = require('webpack');
 var CompressionPlugin = require("compression-webpack-plugin");
 
 module.exports = {
+    devtool: 'source-map',
     plugins: [
         new webpack.DefinePlugin({
             'process.env': {
@@ -13,6 +14,7 @@ module.exports = {
             debug: false
         }),
         new webpack.optimize.UglifyJsPlugin({
+            sourceMap: true,
             compress: {
                 warnings: false,
                 screw_ie8: true,

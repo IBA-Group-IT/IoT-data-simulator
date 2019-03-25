@@ -11,6 +11,6 @@ You don't need to sign any CLA or to agree to a DCO - all your contributions wil
 For any bug please create a github issue with its description.  
 In case of new features/ bug fixes / documentation updates please submit a PRs.
 
-We are available in project gitter. Welcome with any qestions or suggestions.  
+We are available in project [gitter](https://gitter.im/IoT-data-simulator/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge). Welcome with any questions or suggestions.  
 Also please keep in mind that this project isn't in active development currently. We will do our best to process all you requests, but in some cases 
 it can take some time, so, be patient please.

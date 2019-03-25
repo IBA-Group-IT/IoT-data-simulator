@@ -248,3 +248,8 @@ Data simulator solves several problems at once:
 For example, you can simulate raw device data to develop and test initial processing, simulate “cleaned up” data stream to develop and test analytic components, and simulate analytic component results to develop and test visualization and UX.
 
 > Written with [StackEdit](https://stackedit.io/).
+
+## Contributing
+
+Thanks for your interest in contributing!  
+Get started here (link) [https://github.com/IBA-Group-IT/IoT-data-simulator/blob/master/CONTRIBUTING.md].

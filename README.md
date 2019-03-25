@@ -252,4 +252,4 @@ For example, you can simulate raw device data to develop and test initial proces
 ## Contributing
 
 Thanks for your interest in contributing!  
-Get started here (link) [https://github.com/IBA-Group-IT/IoT-data-simulator/blob/master/CONTRIBUTING.md].
+Get started here [link](https://github.com/IBA-Group-IT/IoT-data-simulator/blob/master/CONTRIBUTING.md).

@@ -7,7 +7,7 @@ services:
     environment:
       - MONGO_INITDB_ROOT_USERNAME=${MONGODB_USERNAME}
       - MONGO_INITDB_ROOT_PASSWORD=${MONGODB_PASSWORD}
-      - MONGO_INITDB_DATABASE =${MONGODB_INIT_DATABASE}
+      - MONGO_INITDB_DATABASE=${MONGODB_INIT_DATABASE}
   minio:
     image: minio/minio
     volumes:

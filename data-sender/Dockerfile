@@ -21,10 +21,9 @@ WORKDIR /usr/data-sender
 
 COPY --from=node_modules_installer /usr/data-sender/node_modules/ ./node_modules
 COPY . .
+RUN chmod +x docker-entrypoint.sh
 
 # Remote debug port
 EXPOSE 5858
-
-RUN ls /usr/data-sender
 
 ENTRYPOINT ["/bin/bash", "-c", "/usr/data-sender/docker-entrypoint.sh"]
